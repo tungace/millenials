@@ -17,7 +17,7 @@ use Facebook\HttpClients\FacebookHttpable;
 // init app with app id and secret
 FacebookSession::setDefaultApplication( '462253767264972','f2f4dfc300365bb99183bce4b94daa6d' );
 // login helper with redirect_uri
-    $helper = new FacebookRedirectLoginHelper('http://tungace.com/fbconfig.php' );
+    $helper = new FacebookRedirectLoginHelper('./fbconfig.php' );
 try {
   $session = $helper->getSessionFromRedirect();
 } catch( FacebookRequestException $ex ) {
@@ -49,8 +49,8 @@ if ( isset( $session ) ) {
 	    	$_SESSION['USERNAME'] = $fbuname;
         	$_SESSION['FULLNAME'] = $fbfullname;
 	    	$_SESSION['EMAIL'] =  $femail;
-	    	if ($_SESSION['link']!=''){$location = 'http://tungace.com/'.$_SESSION['link'];$_SESSION['link']='';header("Location: ".$location); }else
-	    	{header("Location: http://tungace.com");}
+	    	if ($_SESSION['link']!=''){$location = './'.$_SESSION['link'];$_SESSION['link']='';header("Location: ".$location); }else
+	    	{header("Location: .");}
 
 	}else {
 /*

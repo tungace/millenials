@@ -101,7 +101,7 @@ function clean($string) {
 function login()
 {
 	global $mmhclass;
-	$loginUrl='http://tungace.com/fbconfig.php';
+	$loginUrl='./fbconfig.php';
  header("Location: ".$loginUrl);
 return $_SESSION['FBID'];
 }
@@ -197,7 +197,7 @@ function showheader($loai,$loai_id)
 		    <p class="lead">'.$gioi_thieu.'.</p>
 			</div>
 		  	<div class="col-md-5 sidebar">
-		'.$video.'  	<a href="http://tungace.com/'.get_course_register_link('khoa-hoc',$loai_id).'" class="btn btn-success btn-lg" role="button">Tham gia khóa học</a>  <a href="#about-the-course" class="btn btn-warning btn-lg" role="button">Thông tin thêm </a>
+		'.$video.'  	<a href="./'.get_course_register_link('khoa-hoc',$loai_id).'" class="btn btn-success btn-lg" role="button">Tham gia khóa học</a>  <a href="#about-the-course" class="btn btn-warning btn-lg" role="button">Thông tin thêm </a>
 		</div>	
 		
 		  </div>
@@ -342,7 +342,7 @@ function showleft($loai,$loai_id)
 		case 'lien-lac':
 		case 'bai-hoc':
 		case 'thao-luan':   
-		$courselink = get_course_link($loai,$loai_id);$courselink='http://tungace.com/'.$courselink; 		
+		$courselink = get_course_link($loai,$loai_id);$courselink='./'.$courselink; 		
 			$return= '		
 			<div class="col-md-2 sidebar" style="font-weight:bold;">
 			<ul class="nav nav-list bs-docs-sidenav">
@@ -437,7 +437,7 @@ function showmain($loai,$loai_id)
 			</div>';
 			}else{	
 			$url_info= $mmhclass->db->fetch_array($mmhclass->db->query("SELECT * FROM `m_url` WHERE `id-loai`= '".$loai_id."' AND `loai`= 'intro-khoa-hoc'"));			
-			header("Location: http://tungace.com/".$url_info['url']);	
+			header("Location: ./".$url_info['url']);	
 			}
      		   break;	
 		case 'danh-sach-bai-giang':
@@ -589,12 +589,12 @@ function load_user_basic_info($avatar,$ten,$title,$purpose,$fbid)
 			<div class="col-xs-8 col-sm-1">
 			<img alt="'.$ten.'" src="'.$avatar.'" height="32" width="32">      </div>
 			<div class="col-xs-4 col-sm-10">
-			<author><a href="http://tungace.com/user/'.$fbid.'">'.$ten.', '.$title.'</a></author><br>';
+			<author><a href="./user/'.$fbid.'">'.$ten.', '.$title.'</a></author><br>';
      		break;
      		
     		case 'tuong-tac':
 		$return= '		
- 			<a href="http://tungace.com/user/'.$fbid.'"> <img alt="'.$ten.'" src="'.$avatar.'" class="profile_photo_img" height="18" width="18"> '.$ten.'</a> ';
+ 			<a href="./user/'.$fbid.'"> <img alt="'.$ten.'" src="'.$avatar.'" class="profile_photo_img" height="18" width="18"> '.$ten.'</a> ';
      		break;     		   
     	default:
 	$return['avatar']=$avatar;
@@ -618,7 +618,7 @@ function load_likers($loai,$loai_id,$purpose)
 		{
 		$i++;
 		$likerinfo=load_user_basic_info('0','1','0','0',$single_like['fbid']);
-		$likers.='<a href="http://tungace.com/user/'.$fbid.'">'.$likerinfo['ten-hien-thi'].'</a>, '; 
+		$likers.='<a href="./user/'.$fbid.'">'.$likerinfo['ten-hien-thi'].'</a>, '; 
 		}
 		$return = '<b>'.$i.' lượt thích</b>';
 		if ($i>0){$return=$return.'bởi'.$likers;}
@@ -682,7 +682,7 @@ function load_single_post($loai,$loai_id)
 					</div>
 					<div class="noi-dung col-sm-11">
 						'.$content.'	
-						<a href="http://tungace.com/'.$url.'">(Đọc tiếp)</a>
+						<a href="./'.$url.'">(Đọc tiếp)</a>
 					</div>
 							
 				</div>
@@ -717,7 +717,7 @@ function load_single_post($loai,$loai_id)
 						<div class="row">
 					
 							<div class="col-xs-8 col-sm-11">
-								<a href="http://tungace.com/tags/'.$the.'" class="btn btn-default btn-xs active" role="button">'.$the.'</a>       
+								<a href="./tags/'.$the.'" class="btn btn-default btn-xs active" role="button">'.$the.'</a>       
 							</div>
 							<div class="col-xs-8 col-xs-1">
 								<div class="btn-group">
@@ -733,7 +733,7 @@ function load_single_post($loai,$loai_id)
 							</div>
 						</div>
 					</div>
-					<a href="http://tungace.com/'.$url.'"><htitle>'.$tieude.'</htitle></a>				
+					<a href="./'.$url.'"><htitle>'.$tieude.'</htitle></a>				
 					<div class="row">
 							'.$userinfo.'
 							<div class="unimportant-lines">
@@ -743,7 +743,7 @@ function load_single_post($loai,$loai_id)
 					</div>
 					<div class="noi-dung">
 						'.$content.'	
-						<a href="http://tungace.com/'.$url.'">(Đọc tiếp)</a>
+						<a href="./'.$url.'">(Đọc tiếp)</a>
 					</div>
 							
 				</div>
@@ -777,7 +777,7 @@ function load_single_post($loai,$loai_id)
 					
 							<div class="col-xs-8 col-sm-11">
 					
-								<a href="http://tungace.com/tags/'.$the.'" class="btn btn-default btn-xs active" role="button">'.$the.'</a>       
+								<a href="./tags/'.$the.'" class="btn btn-default btn-xs active" role="button">'.$the.'</a>       
 							</div>
 							<div class="col-xs-8 col-xs-1">
 								<div class="btn-group">
@@ -796,7 +796,7 @@ function load_single_post($loai,$loai_id)
 									
 
 
-						<a href="http://tungace.com/'.$url.'"><hquestion>'.$tieude.'</hquestion></a>
+						<a href="./'.$url.'"><hquestion>'.$tieude.'</hquestion></a>
 
 
 					<div class="noi-dung">
@@ -834,7 +834,7 @@ function load_single_post($loai,$loai_id)
 					
 							<div class="col-xs-8 col-sm-11">
 					
-								<a href="http://tungace.com/tags/'.$the.'" class="btn btn-default btn-xs active" role="button">'.$the.'</a>       
+								<a href="./tags/'.$the.'" class="btn btn-default btn-xs active" role="button">'.$the.'</a>       
 							</div>
 							<div class="col-xs-8 col-xs-1">
 								<div class="btn-group">
@@ -853,7 +853,7 @@ function load_single_post($loai,$loai_id)
 									
 
 
-						<a href="http://tungace.com/'.$url.'"><hquestion>'.$tieude.'</hquestion></a>
+						<a href="./'.$url.'"><hquestion>'.$tieude.'</hquestion></a>
 					<div class="noi-dung">
 					'.$content.'<br/>
 					</div>
@@ -894,7 +894,7 @@ function load_single_post($loai,$loai_id)
 					
 							<div class="col-xs-8 col-sm-11">
 					
-								<a href="http://tungace.com/tags/'.$the.'" class="btn btn-default btn-xs active" role="button">'.$the.'</a>       
+								<a href="./tags/'.$the.'" class="btn btn-default btn-xs active" role="button">'.$the.'</a>       
 							</div>
 							<div class="col-xs-8 col-xs-1">
 								<div class="btn-group">
@@ -910,7 +910,7 @@ function load_single_post($loai,$loai_id)
 							</div>
 						</div>
 					</div>
-					<a href="http://tungace.com/'.$url.'"><htitle>'.$tieude.'</htitle></a>				
+					<a href="./'.$url.'"><htitle>'.$tieude.'</htitle></a>				
 					<div class="row">
 							'.$userinfo.'
 							<div class="unimportant-lines">
@@ -959,7 +959,7 @@ function load_single_post($loai,$loai_id)
 					
 							<div class="col-xs-8 col-sm-11">
 					
-								<a href="http://tungace.com/tags/'.$the.'" class="btn btn-default btn-xs active" role="button">'.$the.'</a>       
+								<a href="./tags/'.$the.'" class="btn btn-default btn-xs active" role="button">'.$the.'</a>       
 							</div>
 							<div class="col-xs-8 col-xs-1">
 								<div class="btn-group">
@@ -975,7 +975,7 @@ function load_single_post($loai,$loai_id)
 							</div>
 						</div>
 					</div>
-					<a href="http://tungace.com/'.$url.'"><htitle>'.$tieude.'</htitle></a>				
+					<a href="./'.$url.'"><htitle>'.$tieude.'</htitle></a>				
 					<div class="row">
 							'.$userinfo.'
 							<div class="unimportant-lines">
@@ -985,7 +985,7 @@ function load_single_post($loai,$loai_id)
 					</div>
 					<div class="noi-dung">
 						<b><i>'.$preview.'</b></i><br/><img src="'.$thumbnail.'" style="max-height:400px;max-width:400px;"><br/>
-						<a href="http://tungace.com/'.$url.'">(Đọc tiếp)</a>
+						<a href="./'.$url.'">(Đọc tiếp)</a>
 					</div>
 							
 				</div>
@@ -1020,7 +1020,7 @@ function load_single_post($loai,$loai_id)
 						<div class="col-xs-8 col-sm-1">
 							<img alt="'.$userinfo['ten-hien-thi'].'" src="'.$userinfo['avatar'].'" height="32" width="32">      </div>
 						<div class="col-xs-4 col-sm-10">
-							<author><a href="http://tungace.com/user/'.$userinfo['fbid'].'">'.$userinfo['ten-hien-thi'].', '.$userinfo['title'].'</a></author><br>
+							<author><a href="./user/'.$userinfo['fbid'].'">'.$userinfo['ten-hien-thi'].', '.$userinfo['title'].'</a></author><br>
 							<div class="unimportant-lines">
 							'.$likeinfo.'
 							</div>      
@@ -1043,7 +1043,7 @@ function load_single_post($loai,$loai_id)
 					</div>
 					<div class="noi-dung">
 						'.$content.'	
-						<a href="http://tungace.com/'.$url.'">(Đọc tiếp)</a>
+						<a href="./'.$url.'">(Đọc tiếp)</a>
 					</div>
 							
 				</div>
@@ -1169,7 +1169,7 @@ function register_course($loai,$loai_id)
 		}
 	$url_info= $mmhclass->db->fetch_array($mmhclass->db->query("SELECT * FROM `m_url` WHERE `id-loai`= '".$loai_id."' AND `loai`= 'trang-chu-khoa-hoc'"));			
 	//echo "URLINFO";print_r($url_info);
-	header("Location: http://tungace.com/".$url_info['url']);
+	header("Location: ./".$url_info['url']);
 	}else
 	{
 	//echo "CHua DANG NHAP".$_GET['params'];
@@ -1204,7 +1204,7 @@ function redirect_ve_intro($loai,$loai_id)
     		if (check_registered_course('khoa-hoc',$loai_id)!='1')
 			{	
 			$url_info= $mmhclass->db->fetch_array($mmhclass->db->query("SELECT * FROM `m_url` WHERE `id-loai`= '".$loai_id."' AND `loai`= 'intro-khoa-hoc'"));			
-			header("Location: http://tungace.com/".$url_info['url']);	
+			header("Location: ./".$url_info['url']);	
 			}
 }
 function get_course_link($loai,$loai_id)
@@ -1234,7 +1234,7 @@ function load_course_list($loai_id)
 		$return=$return.'
 			<tr>
 		          <th scope="row">'.$i.'</th>
-		          <td> <a href="http://tungace.com/'.$url.'">'.$tieu_de.'</a></td>
+		          <td> <a href="./'.$url.'">'.$tieu_de.'</a></td>
 		        </tr>
 		        <tr>
 		';
@@ -1261,7 +1261,7 @@ function load_bai_hoc($loai_id)
 		$tieu_de=stripslashes($baihoc_content['tieu-de']);
 		$noi_dung=stripslashes($baihoc_content['noi-dung']);
 		$tom_tat=stripslashes($baihoc_content['tom-tat']);
-	$danh_sach_bai_giang='<a class="btn btn-success btn-lg" href="http://tungace.com/'.get_course_link('bai-hoc',$loai_id).'/danh-sach-bai-giang" role="button">Quay lại danh sách bài giảng</a> <br/><br/><br/>';
+	$danh_sach_bai_giang='<a class="btn btn-success btn-lg" href="./'.get_course_link('bai-hoc',$loai_id).'/danh-sach-bai-giang" role="button">Quay lại danh sách bài giảng</a> <br/><br/><br/>';
 	$return='<h2>'.$tieu_de.'</h2><br/>'.$noi_dung.'<br/>'.$tom_tat.'<br/>'.$danh_sach_bai_giang;
 	return $return;
 }	
@@ -1276,7 +1276,7 @@ function load_cac_khoa_hoc()
 		$return=$return.'
 			<div class="row jumbotron box-shadow">
 			  <div class="col-sm-12">
-			         <a href="http://tungace.com/'.$url.'"><h2>'.$tieu_de.'</h2></a>
+			         <a href="./'.$url.'"><h2>'.$tieu_de.'</h2></a>
 			    <div class="row">
 			      <div class="col-xs-8 col-sm-2">
 			<img src="'.$single_course['image'].'" style="height: 68px;
@@ -1285,7 +1285,7 @@ function load_cac_khoa_hoc()
 				  <div class="col-xs-4 col-sm-10">
 			        <p>'.$tac_gia.'</p>
 			        <p>
-			          <a class="btn btn-lg btn-primary" href="http://tungace.com/'.$url.'" role="button">Xem thông tin khóa học</a>
+			          <a class="btn btn-lg btn-primary" href="./'.$url.'" role="button">Xem thông tin khóa học</a>
 			        </p>
 			      </div>
 			    </div>
@@ -1500,7 +1500,7 @@ function tra_loi_cau_hoi($loai,$loai_id)
 									<div class="col-xs-12 col-sm-11" style="text-align:left;">
 										<author><a href="#"><b>'.$onlineuser['ten-hien-thi'].'</b></a></author><br/>
 										<div class="unimportant-lines">
-										<a href="http://tungace.com/user/'.$_SESSION['FBID'].'">'.$onlineuser['title'].'</a> 
+										<a href="./user/'.$_SESSION['FBID'].'">'.$onlineuser['title'].'</a> 
 										</div>      
 										<br/>
 										<textarea class="form-control" rows="3" name="noi-dung"></textarea>									<br/>  	              

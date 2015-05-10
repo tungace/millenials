@@ -22,16 +22,16 @@ if (($_SESSION['FBID']>0)&&($_POST['request']!=''))
 			if (($_POST['loai-doi-tuong']!='tra-loi')&&($_POST['loai-doi-tuong']!='bai-viet')&&($_POST['loai-doi-tuong']!='comment'))
 			{
 		    		$getback= $mmhclass->db->fetch_array($mmhclass->db->query("SELECT * FROM `m_content` WHERE `loai`= '".$loai."' AND `id-doi-tuong`= '".$id_doi_tuong."' AND `fbid`= '".$_SESSION['FBID']."' AND `noi-dung`= '".$noi_dung."' AND `thoi-gian`= '".$time."' AND `tinh-trang`= 'published' "));
-		    		$link=geturl($_POST['loai-doi-tuong'],$_POST['id-doi-tuong']).'/'.$loai.'/'.$getback['id'];$redirect='http://tungace.com/'.$link;
+		    		$link=geturl($_POST['loai-doi-tuong'],$_POST['id-doi-tuong']).'/'.$loai.'/'.$getback['id'];$redirect='./'.$link;
 		    		$mmhclass->db->query("INSERT INTO `m_url` (`loai`, `id-loai`, `url`,`tinh-trang`) VALUES ('{$loai}', '{$getback['id']}', '{$link}','published');"); 
 		    	}else{ 
 		    	  	if ($_POST['loai-doi-tuong']=='comment')
 		    		{$getback= $mmhclass->db->fetch_array($mmhclass->db->query("SELECT * FROM `m_content` WHERE `loai`= '".$_POST['loai-doi-tuong']."' AND `id`= '".$_POST['id-doi-tuong']."'"));
-		    		$redirect='http://tungace.com/'.geturl($getback['loai-doi-tuong'],$getback['id-doi-tuong']);
+		    		$redirect='./'.geturl($getback['loai-doi-tuong'],$getback['id-doi-tuong']);
 		    		}
 		    		else
 		    		{    	
-		    		$redirect='http://tungace.com/'.geturl($_POST['loai-doi-tuong'],$_POST['id-doi-tuong']);}}
+		    		$redirect='./'.geturl($_POST['loai-doi-tuong'],$_POST['id-doi-tuong']);}}
     		}
 
 		 header("Location: ".$redirect);			    		
@@ -52,7 +52,7 @@ if (($_SESSION['FBID']>0)&&($_POST['request']!=''))
 	// 	$mmhclass->db->query("UPDATE m_user SET `email`='$email' ,`gioi-tinh`='$gioi_tinh' ,`ngay-sinh`='$ngay_sinh' ,`chuc-vu`='$chuc_vu' ,`noi-lam-viec`='$noi_lam_viec' ,`mo-ta`='$mo_ta' ,`website`='$website' ,`fb`='$fb' ,`twitter`='$twitter' WHERE fbid=$_SESSION['FBID']");
 	$mmhclass->db->query("UPDATE m_user SET `email`='".$email."' ,`gioi-tinh`='".$gioi_tinh."' ,`ngay-sinh`='".$ngay_sinh."' ,`chuc-vu`='".$chuc_vu."' ,`noi-lam-viec`='".$noi_lam_viec."' ,`mo-ta`='".$mo_ta."' ,`website`='".$website."' ,`fb`='".$fb."' ,`twitter`='".$twitter."' WHERE fbid='".$_SESSION['FBID']."'");
 	
-	$redirect='http://tungace.com/user/'.$user_info['fbid'];
+	$redirect='./user/'.$user_info['fbid'];
 	 header("Location: ".$redirect);
 	 
 	 
@@ -69,7 +69,7 @@ if (($_SESSION['FBID']>0)&&($_POST['request']!=''))
 			if ($_POST['tieu-de']!=''){$tieu_de=addslashes($_POST['tieu-de']);}else{$tieu_de=$user_info['tieu-de'];}
 			if ($_POST['the']!=''){$the=addslashes($_POST['the']);}else{$mo_ta=$user_info['the'];}
 			$mmhclass->db->query("UPDATE m_content SET `noi-dung`='".$noidung."',`tieu-de`='".$tieu_de."' ,`the`='".$the."',`preview`='".$preview."' ,`thumbnail`='".$thumbnail."' WHERE id='".$content['id']."'");	}	
-		$redirect='http://tungace.com/'.geturl($_POST['loai'],$_POST['loaiid']);
+		$redirect='./'.geturl($_POST['loai'],$_POST['loaiid']);
 		 header("Location: ".$redirect);	
 		 
 		break;
@@ -85,7 +85,7 @@ $time=date('Y-m-d H:i:s');
  		 $getback= $mmhclass->db->fetch_array($mmhclass->db->query("SELECT * FROM `m_content` WHERE `loai`= '".$_POST['loai']."' AND `fbid`= '".$_SESSION['FBID']."' AND `noi-dung`= '".$noidung."' AND `thoi-gian`= '".$time."' AND `tinh-trang`= 'published' AND `tieu-de`= '".$tieude."' AND `the`= '".$the."' "));
  		 
 		$redirect=$_POST['loai'].'/'.$getback['id'].'-'.unicode_str_filter($tieude);
-		 $mmhclass->db->query("INSERT INTO `m_url` (`loai`, `id-loai`, `url`,`tinh-trang`) VALUES ('{$_POST['loai']}', '{$getback['id']}', '{$redirect}','published');");$redirect='http://tungace.com/'.$redirect;
+		 $mmhclass->db->query("INSERT INTO `m_url` (`loai`, `id-loai`, `url`,`tinh-trang`) VALUES ('{$_POST['loai']}', '{$getback['id']}', '{$redirect}','published');");$redirect='./'.$redirect;
 		header("Location: ".$redirect);		
      		}
      		break;     		        		    		        		   

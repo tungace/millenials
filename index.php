@@ -50,7 +50,7 @@ switch ($_GET[params]):
     		}
     		else
     		{
-    		//header("Location: http://tungace.com/404");
+    		//header("Location: ./404");
     		}
 
 endswitch; 

@@ -8,21 +8,21 @@
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <meta name="description" content="">
     <meta name="author" content="">
-    <link rel="icon" href="http://tungace.com/bootstrap/docs/examples/navbar-fixed-top/favicon.ico">
+    <link rel="icon" href="./bootstrap/docs/examples/navbar-fixed-top/favicon.ico">
 
     <title>Fixed Top Navbar Example for Bootstrap</title>
 
     <!-- Bootstrap core CSS -->
-    <link href="http://tungace.com/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="./bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- Custom styles for this template -->
-    <link href="http://tungace.com/bootstrap/docs/examples/navbar-fixed-top/navbar-fixed-top.css" rel="stylesheet">
-    <link href="http://tungace.com/bootstrap/docs/examples/navbar-fixed-top/additional-slider.css" rel="stylesheet">
+    <link href="./bootstrap/docs/examples/navbar-fixed-top/navbar-fixed-top.css" rel="stylesheet">
+    <link href="./bootstrap/docs/examples/navbar-fixed-top/additional-slider.css" rel="stylesheet">
 
     <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
     <!--[if lt IE 9]><script src="/bootstrap/docs/examples/navbar-fixed-top/assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
-    <script src="http://tungace.com/bootstrap/assets/js/ie-emulation-modes-warning.js"></script>
-    <script src="http://tungace.com/bootstrap/assets/js/slider.js"></script>
+    <script src="./bootstrap/assets/js/ie-emulation-modes-warning.js"></script>
+    <script src="./bootstrap/assets/js/slider.js"></script>
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -49,7 +49,7 @@ $(document).ready(function(){
   </head>
 
   <body>
-	<!--var link = "http://tungace.com/xulytest.php?loai=" + loai + "&loaiid=" + loaiid + "&request=" + request;    -->
+	<!--var link = "./xulytest.php?loai=" + loai + "&loaiid=" + loaiid + "&request=" + request;    -->
     <!-- Fixed navbar -->
     <nav class="navbar navbar-default navbar-fixed-top">
           <div class="container">
@@ -305,9 +305,9 @@ $(document).ready(function(){
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
 
-    <script src="http://tungace.com/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="./bootstrap/dist/js/bootstrap.min.js"></script>
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-    <script src="http://tungace.com/bootstrap/docs/assets/js/ie10-viewport-bug-workaround.js"></script>
+    <script src="./bootstrap/docs/assets/js/ie10-viewport-bug-workaround.js"></script>
 	</body>
 
   </html>
