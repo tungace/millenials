@@ -8,7 +8,7 @@
 		Modified and used by Ductungnguyen1234@gmail.com
 	*/
 	
-	ob_start(array("ob_gzhandler", 9));
+	//ob_start(array("ob_gzhandler", 9));
 	clearstatcache();
 
 	header("Cache-Control: no-cache, must-revalidate;"); 

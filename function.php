@@ -6,10 +6,14 @@
 //
 //
 //
-	session_start();
-	require_once "./source/includes/data.php";
-	require_once 'autoload.php';
-	
+session_start();
+require_once "./source/includes/data.php";
+require_once 'autoload.php';
+require_once "./classes/Page/HomePage.php";
+require_once "./classes/Page/CourseRegisterPage.php";
+require_once "./classes/Page/EditUserPage.php";
+require_once "./classes/Page/UserPage.php";
+
 function rand_string( $length ) {
 	$chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";	
 
@@ -102,8 +106,8 @@ function login()
 {
 	global $mmhclass;
 	$loginUrl='./fbconfig.php';
- header("Location: ".$loginUrl);
-return $_SESSION['FBID'];
+	header("Location: ".$loginUrl);
+	return $_SESSION['FBID'];
 }
 //////////////////////////////
 
@@ -127,7 +131,7 @@ function showabout()
 {
 	global $mmhclass;
 
-return 'showabout';
+	return 'showabout';
 }
 //////////////////////////////
 
@@ -135,7 +139,7 @@ function showlienhe()
 {
 	global $mmhclass;
 
-return 'showlienhe';
+	return 'showlienhe';
 }
 //////////////////////////////
 
@@ -143,7 +147,7 @@ function show404()
 {
 	global $mmhclass;
 
-return '404';
+	return '404';
 }
 
 //////////////////////////////
@@ -152,25 +156,82 @@ function show($loai,$loai_id)
 {
 	global $mmhclass;
 
-	$left=showleft($loai,$loai_id);
-	$main=showmain($loai,$loai_id);
-	$right=showright($loai,$loai_id);	
+	$page = null;
+	
+	switch ($loai){
+		case 'homepage':		//neu la homepage
+			$page = new HomePage();
+     		break;
+			
+    	case 'dang-ky-khoa-hoc':
+			$page = new CourseRegisterPage($loai_id);
+			break;     
+     		
+    	case 'edit-user':
+			$page = new EditUserPage($loai_id);
+			break;   
+       		
+    	case 'user':
+			$page = new UserPage($loai_id);
+			break;    
+			
+    	case 'intro-khoa-hoc':
+			$page = new CourseIntroPage($loai_id);
+			break;	
+			
+    	case 'cac-khoa-hoc':
+			break;   
+			
+    	case 'trang-chu-khoa-hoc':
+    		break;
+			   
+		case 'danh-sach-bai-giang':
+			break;
+     		
+    	case 'thong-tin-khoa-hoc':
+		case 'tai-lieu':
+		case 'thong-tin-huu-ich':
+		case 'faq':
+		case 'lien-lac':
+			break;	
+    	case 'bai-hoc':
+			break;     			     			     		        		    		        		
+    	case 'bai-viet':
+			break;
+    	case 'cau-hoi':
+			break;
+    	case 'tra-loi':
+			break;     		     		     		
+    	default:
+			break;
 
-$return = showtemplate($left,$main,$right,$loai,$loai_id); //sau khi đã có đầy đủ thông tin các phần quan trọng thì chèn vào template
-return $return;
+	}
+	
+	//$left=showleft($loai,$loai_id);
+	//$main=showmain($loai,$loai_id);
+	//$right=showright($loai,$loai_id);
+	$left	= $page->getLeftPanel();
+	$main	= $page->getMainPanel();
+	$right	= $page->getRightPanel();
+	
+	$return = showtemplate($left, $main, $right, $loai, $loai_id); //sau khi đã có đầy đủ thông tin các phần quan trọng thì chèn vào template
+	return $return;
 }
 
-function showtemplate($left,$main,$right,$loai,$loai_id)
+function showtemplate($left, $main, $right, $loai, $loai_id)
 {
 	global $mmhclass;
+	global $web_root;
+	
 	$header=showheader($loai,$loai_id);
 	$raw= file_get_contents('./main.tpl');
 		$re_header='<#HEADER#>';
 		$re_left='<#LEFT_SIDEBAR#>';
 		$re_main='<#MAIN#>';
 		$re_right='<#RIGHT_SIDEBAR#>';
-	$replace= array($header,$left,$main,$right);
-	$with= array($re_header,$re_left,$re_main,$re_right);
+		$re_root='<#ROOT#>';
+	$replace = array($header, $left, $main, $right, $web_root);
+	$with = array($re_header, $re_left, $re_main, $re_right, $re_root);
 	$return.= str_replace($with, $replace, $raw);		
 	return $return;
 }
@@ -179,45 +240,41 @@ function showheader($loai,$loai_id)
 {
 	global $mmhclass;
 	
-	
-	switch ($loai):
-    		case 'intro-khoa-hoc':
-		$course_info= $mmhclass->db->fetch_array($mmhclass->db->query("SELECT * FROM `m_course` WHERE `id`= '".$loai_id."' AND  `loai`= 'khoa-hoc'"));		
-	
-		$gioi_thieu=stripslashes($course_info['gioi-thieu']);
-		$title=stripslashes($course_info['tieu-de']);	
-		$video=$course_info['video'];
-		if ($video==''){$video='<img src="'.$course_info['image'].'" style="max-height:300px;max-width:400px;">';}
-		$return= '		
-		<header class="jumbotron subhead" id="overview" style="background-color:#bbd8e9;">
-		  <div class="container">
-		  	<div class="col-md-7 sidebar">
+	switch ($loai){
+    	case 'intro-khoa-hoc':
+			$course_info = $mmhclass->db->fetch_array($mmhclass->db->query("SELECT * FROM `m_course` WHERE `id`= '".$loai_id."' AND  `loai`= 'khoa-hoc'"));		
 		
-		    <a href="#"><h2>'.$title.'</h2></a>
-		    <p class="lead">'.$gioi_thieu.'.</p>
-			</div>
-		  	<div class="col-md-5 sidebar">
-		'.$video.'  	<a href="./'.get_course_register_link('khoa-hoc',$loai_id).'" class="btn btn-success btn-lg" role="button">Tham gia khóa học</a>  <a href="#about-the-course" class="btn btn-warning btn-lg" role="button">Thông tin thêm </a>
-		</div>	
-		
-		  </div>
-		</header>
-		';
-     		   break;
-    		case 'cac-khoa-hoc':
+			$gioi_thieu = stripslashes($course_info['gioi-thieu']);
+			$title = stripslashes($course_info['tieu-de']);	
+			$video = $course_info['video'];
+			if ($video==''){
+				$video='<img src="'.$course_info['image'].'" style="max-height:300px;max-width:400px;">';
+			}
+			$return = '	<header class="jumbotron subhead" id="overview" style="background-color:#bbd8e9;">
+							<div class="container">
+								<div class="col-md-7 sidebar">
+									<a href="#"><h2>'.$title.'</h2></a>
+									<p class="lead">'.$gioi_thieu.'.</p>
+								</div>
+								<div class="col-md-5 sidebar">
+									'.$video.'<a href="./'.get_course_register_link('khoa-hoc',$loai_id).'" class="btn btn-success btn-lg" role="button">Tham gia khóa học</a>  <a href="#about-the-course" class="btn btn-warning btn-lg" role="button">Thông tin thêm </a>
+								</div>	
+							</div>
+						</header>';
+     		break;
+    	case 'cac-khoa-hoc':
 			$return='
 			<header class="jumbotron subhead" id="overview" style="background-color:#bbd8e9;">
 			  <div class="container">
 			    <h2>Các khóa học</h2>
-
 			  </div>
 			</header>';
-     		   break;     
-    		case 'user':
+     		break;     
+		case 'user':
 			$return='';
-     		   break;     		        		   		   
-    		case 'trang-chu-khoa-hoc':
-    		case 'thong-tin-khoa-hoc':
+			break;     		        		   		   
+		case 'trang-chu-khoa-hoc':
+		case 'thong-tin-khoa-hoc':
 		case 'danh-sach-bai-giang':
 		case 'tai-lieu':
 		case 'thong-tin-huu-ich':
@@ -225,38 +282,35 @@ function showheader($loai,$loai_id)
 		case 'lien-lac':
 		case 'bai-hoc':
 		case 'thao-luan':        		   
-    		case 'trang-chu-khoa-hoc':
+		case 'trang-chu-khoa-hoc':
 
-		if ($loai=='bai-hoc'){
-		$url_baihoc_info= $mmhclass->db->fetch_array($mmhclass->db->query("SELECT * FROM `m_course` WHERE `id`= '".$loai_id."' AND `loai`= 'bai-hoc'"));	$loai_id=$url_baihoc_info['doi-tuong-id'];
-		}	
-		$course_info= $mmhclass->db->fetch_array($mmhclass->db->query("SELECT * FROM `m_course` WHERE `id`= '".$loai_id."' AND  `loai`= 'khoa-hoc'"));			
-		$tieu_de=stripslashes($course_info['tieu-de']);    		
-			$return= '		
-				<header class="jumbotron subhead" id="overview" style="background-color:#bbd8e9;">
-				  <div class="container">
-				    <h2>'.$tieu_de.'</h2>
-				  </div>
-				</header>
-			';
-     		   break;	
+			if ($loai=='bai-hoc'){
+				$url_baihoc_info= $mmhclass->db->fetch_array($mmhclass->db->query("SELECT * FROM `m_course` WHERE `id`= '".$loai_id."' AND `loai`= 'bai-hoc'"));	$loai_id=$url_baihoc_info['doi-tuong-id'];
+			}	
+			$course_info= $mmhclass->db->fetch_array($mmhclass->db->query("SELECT * FROM `m_course` WHERE `id`= '".$loai_id."' AND  `loai`= 'khoa-hoc'"));			
+			$tieu_de=stripslashes($course_info['tieu-de']);    		
+				$return= '		
+					<header class="jumbotron subhead" id="overview" style="background-color:#bbd8e9;">
+					  <div class="container">
+						<h2>'.$tieu_de.'</h2>
+					  </div>
+					</header>';
+			break;	
      		        		    		        		   
     	default:
     	
-		$return= '		
-			<header class="jumbotron subhead" id="overview" style="background-color:#bbd8e9;">
-			  <div class="container">
-			    <h1>Scaffolding</h1>
-			    <p class="lead">Bootstrap is built on responsive 12-column grids, layouts, and components.</p>
-			
-			  </div>
-			</header>
-		';
-		$return='';
-	endswitch; 	
+			$return = '		
+				<header class="jumbotron subhead" id="overview" style="background-color:#bbd8e9;">
+				  <div class="container">
+					<h1>Scaffolding</h1>
+					<p class="lead">Bootstrap is built on responsive 12-column grids, layouts, and components.</p>
+				
+				  </div>
+				</header>';
+			$return='';
+			break;
+	} 	
 	
-
-
 	return $return;
 }
 
@@ -264,77 +318,24 @@ function showleft($loai,$loai_id)
 {
 	global $mmhclass;
 	
-	switch ($loai):
-    		case 'homepage':
-		//neu la homepage
-		$return= '		
-			<div class=\'col-md-2 sidebar\'>
-			<h3>Left Sidebar</h3>
-			<ul class="nav nav-list bs-docs-sidenav">
-			<li><a href="#global"><i class="icon-chevron-right"></i> Global styles</a></li>
-			<li><a href="#gridSystem"><i class="icon-chevron-right"></i> Grid system</a></li>
-			<li><a href="#fluidGridSystem"><i class="icon-chevron-right"></i> Fluid grid system</a></li>
-			<li><a href="#layouts"><i class="icon-chevron-right"></i> Layouts</a></li>
-			<li><a href="#responsive"><i class="icon-chevron-right"></i> Responsive design</a></li>
-			</ul>
-		
-			<ul class="nav nav-tabs nav-stacked">
-			<li><a href=\'#\'>Another Link 1</a></li>
-			<li><a href=\'#\'>Another Link 2</a></li>
-			<li><a href=\'#\'>Another Link 3</a></li>
-			</ul>
-		</div>';
-     		   break;
-    		case 'intro-khoa-hoc':
-		$return= '';
-     		   break; 
-    		case 'edit-user':
-		$return='';
-
-     		break;          		     		   
-    		case 'user':
-    		$user_info=load_user_single_info('1','1','1','1','1','1',$loai_id);
-		$return= '
-		<div class="col-md-2 sidebar">
-		
-<div class="row">
-          <img width="200" height="200" alt="'.$user_info['ten-hien-thi'].'" src="'.$user_info['avatar'].'" class="profile_photo_img img-thumbnail">
-        </div>		
-			<h3>Đóng góp</h3>
-			<ul class="nav nav-list bs-docs-sidenav">
-			<li><a href="#global"><i class="icon-chevron-right"></i> Khóa học</a></li>
-			<li><a href="#gridSystem"><i class="icon-chevron-right"></i> Bài viết</a></li>
-			<li><a href="#fluidGridSystem"><i class="icon-chevron-right"></i> Câu trả lời</a></li>
-			<li><a href="#layouts"><i class="icon-chevron-right"></i> Câu hỏi</a></li>
-			<li><a href="#responsive"><i class="icon-chevron-right"></i> Bình luận</a></li>
-			</ul>
-		
-		</div>
-		';
-     		   break;      		   
-
-    		case 'cac-khoa-hoc':
+	switch ($loai){
+    	case 'cac-khoa-hoc':
 			$return='
 					<div class="col-md-2 sidebar" style="font-weight:bold;">
-			<ul class="nav nav-list bs-docs-sidenav">
-			<li><a href="#global" class="list-group-item active"><i class="icon-chevron-right"></i> Trang chủ các khóa học</a></li>
-			<li><a href="#gridSystem" class="list-group-item"><i class="icon-chevron-right"></i> Khóa học đã đăng ký</a></li>
-			<li><a href="#responsive" class="list-group-item"><i class="icon-chevron-right"></i>Về các chương trình học</a></li>
-			
-<br/><p>Liên kết</p>			
-			<li><a href="#layouts" class="list-group-item"><i class="icon-chevron-right"></i> Trường đại học X</a></li>
-			<li><a href="#layouts" class="list-group-item"><i class="icon-chevron-right"></i> Trung học Y</a></li>			
-			<li><a href="#responsive" class="list-group-item"><i class="icon-chevron-right"></i>Trung tâm Z</a></li>
-			<li><a href="#responsive" class="list-group-item"><i class="icon-chevron-right"></i>Giáo sư lọ</a></li>
-
-			
-			</ul>
-			
-		</div>';
-
-     		   break;    
-    		case 'trang-chu-khoa-hoc':
-    		case 'thong-tin-khoa-hoc':
+						<ul class="nav nav-list bs-docs-sidenav">
+							<li><a href="#global" class="list-group-item active"><i class="icon-chevron-right"></i> Trang chủ các khóa học</a></li>
+							<li><a href="#gridSystem" class="list-group-item"><i class="icon-chevron-right"></i> Khóa học đã đăng ký</a></li>
+							<li><a href="#responsive" class="list-group-item"><i class="icon-chevron-right"></i>Về các chương trình học</a></li>
+							<br/><p>Liên kết</p>			
+							<li><a href="#layouts" class="list-group-item"><i class="icon-chevron-right"></i> Trường đại học X</a></li>
+							<li><a href="#layouts" class="list-group-item"><i class="icon-chevron-right"></i> Trung học Y</a></li>			
+							<li><a href="#responsive" class="list-group-item"><i class="icon-chevron-right"></i>Trung tâm Z</a></li>
+							<li><a href="#responsive" class="list-group-item"><i class="icon-chevron-right"></i>Giáo sư lọ</a></li>						
+						</ul>
+					</div>';
+     		break;    
+    	case 'trang-chu-khoa-hoc':
+    	case 'thong-tin-khoa-hoc':
 		case 'danh-sach-bai-giang':
 		case 'tai-lieu':
 		case 'thong-tin-huu-ich':
@@ -342,166 +343,137 @@ function showleft($loai,$loai_id)
 		case 'lien-lac':
 		case 'bai-hoc':
 		case 'thao-luan':   
-		$courselink = get_course_link($loai,$loai_id);$courselink='./'.$courselink; 		
+			$courselink = get_course_link($loai,$loai_id);$courselink='./'.$courselink; 		
 			$return= '		
-			<div class="col-md-2 sidebar" style="font-weight:bold;">
-			<ul class="nav nav-list bs-docs-sidenav">
-			<li><a href="'.$courselink.'" class="list-group-item active"><i class="icon-chevron-right"></i> Bảng tin</a></li>
-			<li><a href="'.$courselink.'/thong-tin-khoa-hoc" class="list-group-item"><i class="icon-chevron-right"></i> Về khóa học</a></li>
-			<li><a href="'.$courselink.'/danh-sach-bai-giang" class="list-group-item"><i class="icon-chevron-right"></i> Danh sách bài giảng</a></li>
-			<li><a href="'.$courselink.'/tai-lieu" class="list-group-item"><i class="icon-chevron-right"></i> Tài liệu liên quan</a></li>
-			<li><a href="'.$courselink.'/thong-tin-huu-ich" class="list-group-item"><i class="icon-chevron-right"></i> Thông tin hữu ích</a></li>			
-			<li><a href="'.$courselink.'#" class="list-group-item"><i class="icon-chevron-right"></i>Bài kiểm tra</a></li>
-			<li><a href="'.$courselink.'#" class="list-group-item"><i class="icon-chevron-right"></i>Thảo luận</a></li>
-			<li><a href="'.$courselink.'/faq" class="list-group-item"><i class="icon-chevron-right"></i>Quy chế và cách đánh giá</a></li>
-			<li><a href="'.$courselink.'/lien-lac" class="list-group-item"><i class="icon-chevron-right"></i>Liên lạc với giảng viên</a></li>
-			</ul>
-			
-		</div>';
-     		   break;	     		    		   
+				<div class="col-md-2 sidebar" style="font-weight:bold;">
+					<ul class="nav nav-list bs-docs-sidenav">
+						<li><a href="'.$courselink.'" class="list-group-item active"><i class="icon-chevron-right"></i> Bảng tin</a></li>
+						<li><a href="'.$courselink.'/thong-tin-khoa-hoc" class="list-group-item"><i class="icon-chevron-right"></i> Về khóa học</a></li>
+						<li><a href="'.$courselink.'/danh-sach-bai-giang" class="list-group-item"><i class="icon-chevron-right"></i> Danh sách bài giảng</a></li>
+						<li><a href="'.$courselink.'/tai-lieu" class="list-group-item"><i class="icon-chevron-right"></i> Tài liệu liên quan</a></li>
+						<li><a href="'.$courselink.'/thong-tin-huu-ich" class="list-group-item"><i class="icon-chevron-right"></i> Thông tin hữu ích</a></li>			
+						<li><a href="'.$courselink.'#" class="list-group-item"><i class="icon-chevron-right"></i>Bài kiểm tra</a></li>
+						<li><a href="'.$courselink.'#" class="list-group-item"><i class="icon-chevron-right"></i>Thảo luận</a></li>
+						<li><a href="'.$courselink.'/faq" class="list-group-item"><i class="icon-chevron-right"></i>Quy chế và cách đánh giá</a></li>
+						<li><a href="'.$courselink.'/lien-lac" class="list-group-item"><i class="icon-chevron-right"></i>Liên lạc với giảng viên</a></li>
+					</ul>
+				</div>';
+			break;	     		    		   
     	default:
-		$return= '		
-			<div class=\'col-md-2 sidebar\'>
-			<h3>Left Sidebar</h3>
-			<ul class="nav nav-list bs-docs-sidenav">
-			<li><a href="#global"><i class="icon-chevron-right"></i> Global styles</a></li>
-			<li><a href="#gridSystem"><i class="icon-chevron-right"></i> Grid system</a></li>
-			<li><a href="#fluidGridSystem"><i class="icon-chevron-right"></i> Fluid grid system</a></li>
-			<li><a href="#layouts"><i class="icon-chevron-right"></i> Layouts</a></li>
-			<li><a href="#responsive"><i class="icon-chevron-right"></i> Responsive design</a></li>
-			</ul>
-		
-			<ul class="nav nav-tabs nav-stacked">
-			<li><a href=\'#\'>Another Link 1</a></li>
-			<li><a href=\'#\'>Another Link 2</a></li>
-			<li><a href=\'#\'>Another Link 3</a></li>
-			</ul>
-		</div>';
-
-	endswitch; 
+			$return= '		
+				<div class=\'col-md-2 sidebar\'>
+				<h3>Left Sidebar</h3>
+				<ul class="nav nav-list bs-docs-sidenav">
+					<li><a href="#global"><i class="icon-chevron-right"></i> Global styles</a></li>
+					<li><a href="#gridSystem"><i class="icon-chevron-right"></i> Grid system</a></li>
+					<li><a href="#fluidGridSystem"><i class="icon-chevron-right"></i> Fluid grid system</a></li>
+					<li><a href="#layouts"><i class="icon-chevron-right"></i> Layouts</a></li>
+					<li><a href="#responsive"><i class="icon-chevron-right"></i> Responsive design</a></li>
+				</ul>
+				<ul class="nav nav-tabs nav-stacked">
+					<li><a href=\'#\'>Another Link 1</a></li>
+					<li><a href=\'#\'>Another Link 2</a></li>
+					<li><a href=\'#\'>Another Link 3</a></li>
+				</ul>
+			</div>';
+	} 
 	
 	return $return;
 }
+
 
 function showmain($loai,$loai_id)
 {
 	global $mmhclass;
 	
-	switch ($loai):
-    		case 'homepage':
-		//neu la homepage
-		$postlist=$mmhclass->db->query("SELECT * FROM `m_content`  WHERE `loai` IN ('bai-viet', 'cau-hoi') AND `tinh-trang` = 'published' LIMIT 0 , 30");
-		$i=0;
-		//if (mysql_num_rows ($menulist)>0){$menu='<ul>';}
-		while ($article= $mmhclass->db->fetch_array($postlist))
-		{
-		$loai=$article['loai'].'-homepage';
-		$main.=load_single_post($loai,$article['id']);
-		}
-
-		$return= '		
-			<div class="col-md-7 main">
-			'.$main.'
-			</div>';
-     		break;
-    		case 'dang-ky-khoa-hoc':
-		register_course('khoa-hoc',$loai_id);
-
-     		break;     
-     		
-    		case 'edit-user':
-		$return=edit_user_bio($loai_id);
-
-     		break;          		
-    		case 'user':
-		$return='<div class="col-md-7 main">'.user_bio_page($loai_id).'</div>';
-     		break;     		        				   
-    		case 'intro-khoa-hoc':
-		$main=load_course_intro('khoa-hoc',$loai_id);
-		$return = '
-			<div class="col-md-8 main panstyle" id="about-the-course">
-			'.$main.'
-			</div>';
-     		break;	
-    		case 'cac-khoa-hoc':
-		$return= '
-				<div class="col-md-10 main panstyle" id="about-the-course">
-				'.load_cac_khoa_hoc().'</div>
-		';
-     		   break;     		   				     		       		   				     		
-    		case 'trang-chu-khoa-hoc':
-    		if (check_registered_course('khoa-hoc',$loai_id)=='1')
-			{$return= '		
-			<div class="col-md-8 main panstyle" id="about-the-course">
-			'.load_course_dashboard('khoa-hoc',$loai_id).'
-			</div>';
-			}else{	
-			$url_info= $mmhclass->db->fetch_array($mmhclass->db->query("SELECT * FROM `m_url` WHERE `id-loai`= '".$loai_id."' AND `loai`= 'intro-khoa-hoc'"));			
-			header("Location: ./".$url_info['url']);	
-			}
-     		   break;	
-		case 'danh-sach-bai-giang':
-		redirect_ve_intro($loai,$loai_id);
+	switch ($loai){
 		
-		$return= '		
-			<div class="col-md-8 main panstyle" id="about-the-course">
-			<h2>Danh sách bài giảng</h2>
-			<br/>			
-			'.load_course_list($loai_id).'
-			</div>';
+    	case 'intro-khoa-hoc':
+			$main=load_course_intro('khoa-hoc',$loai_id);
+			$return = '
+				<div class="col-md-8 main panstyle" id="about-the-course">
+				'.$main.'
+				</div>';
+     		break;	
+			
+    	case 'cac-khoa-hoc':
+			$return= '<div class="col-md-10 main panstyle" id="about-the-course">'.load_cac_khoa_hoc().'</div>';
+     		break;   
+			
+    	case 'trang-chu-khoa-hoc':
+    		if (check_registered_course('khoa-hoc',$loai_id)=='1'){
+				$return= '		
+				<div class="col-md-8 main panstyle" id="about-the-course">
+				'.load_course_dashboard('khoa-hoc',$loai_id).'
+				</div>';
+			} else {	
+				$url_info= $mmhclass->db->fetch_array($mmhclass->db->query("SELECT * FROM `m_url` WHERE `id-loai`= '".$loai_id."' AND `loai`= 'intro-khoa-hoc'"));			
+				header("Location: ./".$url_info['url']);	
+			}
+     		break;
+			   
+		case 'danh-sach-bai-giang':
+			redirect_ve_intro($loai,$loai_id);
+		
+			$return= '		
+				<div class="col-md-8 main panstyle" id="about-the-course">
+				<h2>Danh sách bài giảng</h2>
+				<br/>			
+				'.load_course_list($loai_id).'
+				</div>';
      		break;
      		
-    		case 'thong-tin-khoa-hoc':
+    	case 'thong-tin-khoa-hoc':
 		case 'tai-lieu':
 		case 'thong-tin-huu-ich':
 		case 'faq':
 		case 'lien-lac':
-		redirect_ve_intro($loai,$loai_id);		
-		$course_info= $mmhclass->db->fetch_array($mmhclass->db->query("SELECT * FROM `m_course` WHERE `loai`= 'khoa-hoc' AND  `id`= '".$loai_id."' "));		
-		$main= stripslashes($course_info[$loai]);
-		$return= '		
-			<div class="col-md-8 main panstyle" id="about-the-course">
-			<br/>			
-			'.$main.'
-			</div>';		
+			redirect_ve_intro($loai,$loai_id);		
+			$course_info= $mmhclass->db->fetch_array($mmhclass->db->query("SELECT * FROM `m_course` WHERE `loai`= 'khoa-hoc' AND  `id`= '".$loai_id."' "));		
+			$main= stripslashes($course_info[$loai]);
+			$return= '		
+				<div class="col-md-8 main panstyle" id="about-the-course">
+				<br/>			
+				'.$main.'
+				</div>';		
      		break;	
-    		case 'bai-hoc':
-		//neu la bai-hoczz
-		$main=load_bai_hoc($loai_id);
-		$return= '		
-			<div class="col-md-10 main panstyle" id="about-the-course">
-			'.$main.'
-			</div>';
+    	case 'bai-hoc':
+			//neu la bai-hoczz
+			$main=load_bai_hoc($loai_id);
+			$return= '		
+				<div class="col-md-10 main panstyle" id="about-the-course">
+				'.$main.'
+				</div>';
      		break;     			     			     		        		    		        		
-    		case 'bai-viet':
-		//neu la bai-viet
-		$main=load_single_post($loai,$loai_id).loadcomment($loai,$loai_id);
-		$return= '		
-			<div class="col-md-7 main">
-			'.$main.'
-			</div>';
+    	case 'bai-viet':
+			//neu la bai-viet
+			$main=load_single_post($loai,$loai_id).loadcomment($loai,$loai_id);
+			$return= '		
+				<div class="col-md-7 main">
+				'.$main.'
+				</div>';
      		break;
-    		case 'cau-hoi':
-		//neu la cau-hoi
-		$main=load_single_post($loai,$loai_id).loadcomment($loai,$loai_id);
-		$return= '		
-			<div class="col-md-7 main">
-			'.$main.'
-			</div>';
+    	case 'cau-hoi':
+			//neu la cau-hoi
+			$main=load_single_post($loai,$loai_id).loadcomment($loai,$loai_id);
+			$return= '		
+				<div class="col-md-7 main">
+				'.$main.'
+				</div>';
      		break;
-    		case 'tra-loi':
-		//tra-loi
-		$answer_info= $mmhclass->db->fetch_array($mmhclass->db->query("SELECT * FROM `m_content` WHERE `loai`= '".$loai."' AND  `id`= '".$loai_id."' "));		
-		$main=load_single_post($answer_info['loai-doi-tuong'],$answer_info['id-doi-tuong']).load_single_post($loai,$loai_id).loadcomment($loai,$loai_id);
-		$return= '		
-			<div class="col-md-7 main">
-			'.$main.'
-			</div>';
+    	case 'tra-loi':
+			//tra-loi
+			$answer_info= $mmhclass->db->fetch_array($mmhclass->db->query("SELECT * FROM `m_content` WHERE `loai`= '".$loai."' AND  `id`= '".$loai_id."' "));		
+			$main=load_single_post($answer_info['loai-doi-tuong'],$answer_info['id-doi-tuong']).load_single_post($loai,$loai_id).loadcomment($loai,$loai_id);
+			$return= '		
+				<div class="col-md-7 main">
+				'.$main.'
+				</div>';
      		break;     		     		     		
     	default:
+			break;
 
-
-	endswitch; 
+	} 
 	
 	return $return;
 }
@@ -510,66 +482,46 @@ function showright($loai,$loai_id)
 {
 	global $mmhclass;
 	
-	switch ($loai):
-    		case 'homepage':
-		//neu la homepage
-		$return= '		
-			<div class="col-md-3 sidebar">
-			<h3>Right Sidebar</h3>
-			<ul class="nav nav-tabs nav-stacked">
-			<li><a href="#">Another Link 1</a></li>
-			<li><a href="#">Another Link 2</a></li>
-			<li><a href="#">Another Link 3</a></li>
-			</ul>
-			</div>';
-     		   break;
-    		case 'bai-hoc':
-    		case 'cac-khoa-hoc':
-    		case 'edit-user':
-		$return= '';
-     		   break;     		   
-    		case 'trang-chu-khoa-hoc':
-    		case 'thong-tin-khoa-hoc':
+	switch ($loai){
+    	case 'bai-hoc':
+		case 'cac-khoa-hoc':
+			$return= '';
+			break;     		   
+		case 'trang-chu-khoa-hoc':
+		case 'thong-tin-khoa-hoc':
 		case 'danh-sach-bai-giang':
 		case 'tai-lieu':
 		case 'thong-tin-huu-ich':
 		case 'faq':
 		case 'lien-lac':
-	$course_info= $mmhclass->db->fetch_array($mmhclass->db->query("SELECT ghichu FROM `m_course` WHERE `id`= '".$loai_id."' AND  `loai`= 'khoa-hoc'"));		
-	$ghichu=stripslashes($course_info['ghichu']);
-	
-		$return= '		
-			
-			<div class="col-md-2 sidebar">
-			
-				<div class="panel panel-primary">
-					<div class="panel-heading">
-						<h3 class="panel-title">Ghi chú</h3>
+			$course_info= $mmhclass->db->fetch_array($mmhclass->db->query("SELECT ghichu FROM `m_course` WHERE `id`= '".$loai_id."' AND  `loai`= 'khoa-hoc'"));		
+			$ghichu=stripslashes($course_info['ghichu']);
+		
+			$return= '		
+				<div class="col-md-2 sidebar">
+					<div class="panel panel-primary">
+						<div class="panel-heading">
+							<h3 class="panel-title">Ghi chú</h3>
+						</div>
+						<div class="panel-body" style="font-size:10px;">
+							'.$ghichu.'
+						</div> 
 					</div>
-					<div class="panel-body" style="font-size:10px;">
-						'.$ghichu.'
-			
-					</div> 
-				</div>
-			
-			</div>';
-     		   break;	
+				</div>';
+     		break;	
 
-	
     	default:
-		$return= '		
-			<div class="col-md-3 sidebar">
-			<h3>Right Sidebar</h3>
-			<ul class="nav nav-tabs nav-stacked">
-			<li><a href="#">Another Link 1</a></li>
-			<li><a href="#">Another Link 2</a></li>
-			<li><a href="#">Another Link 3</a></li>
-			</ul>
-			</div>';
-
-	endswitch; 
-	
-	
+			$return= '		
+				<div class="col-md-3 sidebar">
+				<h3>Right Sidebar</h3>
+				<ul class="nav nav-tabs nav-stacked">
+				<li><a href="#">Another Link 1</a></li>
+				<li><a href="#">Another Link 2</a></li>
+				<li><a href="#">Another Link 3</a></li>
+				</ul>
+				</div>';
+			break;
+	}
 	return $return;
 }
 
@@ -580,12 +532,13 @@ function load_user_basic_info($avatar,$ten,$title,$purpose,$fbid)
 	
 	if ($avatar=='1'){$avatar=$user_info['avatar'];}
 	if ($ten=='1'){$ten=$user_info['ten-hien-thi'];}
-	if ($title=='1'){$title=$user_info['chuc-vu'].$user_info['noi-lam-viec'];}
+	if ($title=='1'){
+		$title = $user_info['chuc-vu'].$user_info['noi-lam-viec'];}
 	
 	switch ($purpose):
 	
     		case 'tra-loi':
-		$return= '		
+		$return = '		
 			<div class="col-xs-8 col-sm-1">
 			<img alt="'.$ten.'" src="'.$avatar.'" height="32" width="32">      </div>
 			<div class="col-xs-4 col-sm-10">
@@ -612,19 +565,21 @@ function load_likers($loai,$loai_id,$purpose)
 
 
 	switch ($purpose):
-    		case 'tra-loi':
-    		$total_likers=$mmhclass->db->query("SELECT * FROM `m_like`  WHERE `loai` = 'thich' AND `loai-doi-tuong`= '".$loai."' AND `doi-tuong-id`= '".$loai_id."'  ORDER BY `id` DESC LIMIT 4");$i=0;		
-    		while ($single_like= $mmhclass->db->fetch_array($total_likers))
+		case 'tra-loi':
+		$total_likers=$mmhclass->db->query("SELECT * FROM `m_like`  WHERE `loai` = 'thich' AND `loai-doi-tuong`= '".$loai."' AND `doi-tuong-id`= '".$loai_id."'  ORDER BY `id` DESC LIMIT 4");$i=0;		
+		while ($single_like= $mmhclass->db->fetch_array($total_likers))
 		{
-		$i++;
-		$likerinfo=load_user_basic_info('0','1','0','0',$single_like['fbid']);
-		$likers.='<a href="./user/'.$fbid.'">'.$likerinfo['ten-hien-thi'].'</a>, '; 
+			$i++;
+			$likerinfo=load_user_basic_info('0','1','0','0',$single_like['fbid']);
+			$likers.='<a href="./user/'.$fbid.'">'.$likerinfo['ten-hien-thi'].'</a>, '; 
 		}
 		$return = '<b>'.$i.' lượt thích</b>';
-		if ($i>0){$return=$return.'bởi'.$likers;}
-     		break;
+		if ($i>0){
+			$return=$return.'bởi'.$likers;
+		}
+     	break;
      		
-    	default:
+    default:
 		$return=$number_likes['thich'];
 	endswitch; 
 	return $return;
@@ -634,9 +589,9 @@ function geturl($loai,$loai_id)
 {
 	global $mmhclass;
 	if ($loai=='comment'){	
-	$noidung= $mmhclass->db->fetch_array($mmhclass->db->query("SELECT * FROM `m_content` WHERE `loai`= '".$loai."' AND `id`= '".$loai_id."' AND `tinh-trang`= 'published'  "));
-	$loai=$noidung['loai-doi-tuong'];
-	$loai_id=$noidung['id-doi-tuong'];
+		$noidung= $mmhclass->db->fetch_array($mmhclass->db->query("SELECT * FROM `m_content` WHERE `loai`= '".$loai."' AND `id`= '".$loai_id."' AND `tinh-trang`= 'published'  "));
+		$loai=$noidung['loai-doi-tuong'];
+		$loai_id=$noidung['id-doi-tuong'];
 	}
 	
 	$url= $mmhclass->db->fetch_array($mmhclass->db->query("SELECT * FROM `m_url` WHERE `loai`= '".$loai."' AND `id-loai`= '".$loai_id."' AND `tinh-trang`= 'published'  "));	
@@ -646,61 +601,13 @@ function geturl($loai,$loai_id)
 function load_single_post($loai,$loai_id)
 {
 	global $mmhclass;
-	switch ($loai): 
-    		case 'tra-loi':
-			$noidung= $mmhclass->db->fetch_array($mmhclass->db->query("SELECT * FROM `m_content` WHERE `loai`= '".$loai."' AND `id`= '".$loai_id."' AND `tinh-trang`= 'published'  "));
-			$content=stripslashes($noidung['noi-dung']);
-			$userinfo= load_user_basic_info('1','1','1','tra-loi',$noidung['fbid']);
-			$likeinfo=load_likers($loai,$loai_id,'tra-loi');
-			$so_like=load_likers($loai,$loai_id,'0');	$comment_num=checkreply($loai,$loai_id);
-			$url=geturl($loai,$loai_id);$check_likers=checklikers($loai,$loai_id);
-     			$return='
-			<div class="row postlayout">
-					  
-				<div class="col-sm-11">
-					<div class="row">
-							'.$userinfo.'
-							<div class="unimportant-lines">
-							'.$likeinfo.'
-							</div>      
-						</div>
-						<div class="col-xs-8 col-xs-1">
-				
-							<div class="btn-group">
-							<button class="btn dropdown-toggle" data-toggle="dropdown" style="float:right;"> 
-								<span class="caret"></span></button>
-							<ul class="dropdown-menu">
-								<li><a href="#" data-toggle="modal" data-target="#myModal" loai="tra-loi" loaiid="'.$loai_id.'" request="editpost" class="jqueryoption">Chỉnh sửa</a></li>
-								<li><a href="#">Ngừng theo dõi bài</a></li>
-								<li class="divider"></li>
-								<li><a href="#" data-toggle="modal" data-target="#myModal" loai="tra-loi" loaiid="'.$loai_id.'" request="report" class="jqueryoption">Báo cáo</a></li>
-								<li><a href="#" data-toggle="modal" data-target="#myModal" loai="tra-loi" loaiid="'.$loai_id.'" request="delete" class="jqueryoption">Xóa</a></li>				  
-							</ul>
-							</div><!-- /btn-group -->
-						</div>   
-							
-					</div>
-					<div class="noi-dung col-sm-11">
-						'.$content.'	
-						<a href="./'.$url.'">(Đọc tiếp)</a>
-					</div>
-							
-				</div>
-					 
-				<div class="activity col-sm-12"> 
-					<button type="button" class="btn btn-default btn-sm actlike" request="like" likeid="'.$loai_id.'">'.$check_likers['1'].'</button>
-					<a href="#" style="margin-left:20px;">Không thích</a> 
-					<a style="margin-left:20px;" data-toggle="collapse" href="#comment-collapse-'.$noidung['id'].'" aria-expanded="false" aria-controls="comment-collapse-'.$noidung['id'].'">Trả lời '.$comment_num['1'].'</a>  
-					<a href="#" style="margin-left:20px;">Lưu trữ, chia sẻ</a>  
-				</div> 	'.loadcomment('tra-loi',$noidung['id']).'	
-<div class="col-md-1 sidebar"></div><div class="col-md-10" style="border-bottom: solid;border-color:#e1e1e1;border-width: 2px;padding: 5px;margin-top:5px;"></div><div class="col-md-1"></div>		  
-					  
-				</div>
-     			';
+	switch ($loai){
+    	case 'tra-loi':
+			
      		
      		break;
 
-    		case 'tra-loi-homepage':
+    	case 'tra-loi-homepage':
 			$noidung= $mmhclass->db->fetch_array($mmhclass->db->query("SELECT * FROM `m_content` WHERE `loai`= 'tra-loi' AND `id`= '".$loai_id."' AND `tinh-trang`= 'published'  "));
 			$content=stripslashes($noidung['noi-dung']);
 			$tieude=stripslashes($noidung['tieu-de']);	
@@ -761,7 +668,7 @@ function load_single_post($loai,$loai_id)
      		
      		break;
      		
-    		case 'cau-hoi':
+    	case 'cau-hoi':
 			$noidung= $mmhclass->db->fetch_array($mmhclass->db->query("SELECT * FROM `m_content` WHERE `loai`= '".$loai."' AND `id`= '".$loai_id."' AND `tinh-trang`= 'published' "));
 			$content=stripslashes($noidung['noi-dung']);
 			$tieude=stripslashes($noidung['tieu-de']);			
@@ -818,8 +725,8 @@ function load_single_post($loai,$loai_id)
 			';
      		break;
      		
-    		case 'cau-hoi-homepage':
-		$noidung= $mmhclass->db->fetch_array($mmhclass->db->query("SELECT * FROM `m_content` WHERE `loai`= 'cau-hoi' AND `id`= '".$loai_id."' AND `tinh-trang`= 'published' "));
+    	case 'cau-hoi-homepage':
+			$noidung= $mmhclass->db->fetch_array($mmhclass->db->query("SELECT * FROM `m_content` WHERE `loai`= 'cau-hoi' AND `id`= '".$loai_id."' AND `tinh-trang`= 'published' "));
 			$content=stripslashes($noidung['noi-dung']);
 			$tieude=stripslashes($noidung['tieu-de']);	
 			$the=stripslashes($noidung['the']);
@@ -874,8 +781,8 @@ function load_single_post($loai,$loai_id)
      		
      		break;     	
      			
-    		case 'bai-viet':
-		$noidung= $mmhclass->db->fetch_array($mmhclass->db->query("SELECT * FROM `m_content` WHERE `loai`= '".$loai."' AND `id`= '".$loai_id."' AND `tinh-trang`= 'published'"));
+    	case 'bai-viet':
+			$noidung= $mmhclass->db->fetch_array($mmhclass->db->query("SELECT * FROM `m_content` WHERE `loai`= '".$loai."' AND `id`= '".$loai_id."' AND `tinh-trang`= 'published'"));
 			$content=stripslashes($noidung['noi-dung']);
 			$preview=stripslashes($noidung['preview']);			
 			$thumbnail=$noidung['thumbnail'];						
@@ -939,8 +846,8 @@ function load_single_post($loai,$loai_id)
      		break;  
 
      			
-    		case 'bai-viet-homepage':
-		$noidung= $mmhclass->db->fetch_array($mmhclass->db->query("SELECT * FROM `m_content` WHERE `loai`= 'bai-viet' AND `id`= '".$loai_id."' AND `tinh-trang`= 'published'"));
+    	case 'bai-viet-homepage':
+			$noidung= $mmhclass->db->fetch_array($mmhclass->db->query("SELECT * FROM `m_content` WHERE `loai`= 'bai-viet' AND `id`= '".$loai_id."' AND `tinh-trang`= 'published'"));
 			$content=stripslashes($noidung['noi-dung']);
 			$preview=stripslashes($noidung['preview']);			
 			$thumbnail=$noidung['thumbnail'];						
@@ -1003,13 +910,13 @@ function load_single_post($loai,$loai_id)
      			';     		
      		break;  
      		     		  
-    		case 'comment':
-		$noidung= $mmhclass->db->fetch_array($mmhclass->db->query("SELECT * FROM `m_content` WHERE `loai`= '".$loai."' AND `id`= '".$loai_id."' AND `tinh-trang`= 'published' "));
-		$content=stripslashes($noidung['noi-dung']);
-		$userinfo= load_user_basic_info( '1','1','1','0',$noidung['fbid']);
-		$likeinfo=load_likers($loai,$loai_id,'tra-loi');
-		$so_like=load_likers($loai,$loai_id,'0');	
-		$url=geturl($loai,$loai_id);$comment_num=checkreply($loai,$loai_id);$check_likers=checklikers($loai,$loai_id);							
+    	case 'comment':
+			$noidung= $mmhclass->db->fetch_array($mmhclass->db->query("SELECT * FROM `m_content` WHERE `loai`= '".$loai."' AND `id`= '".$loai_id."' AND `tinh-trang`= 'published' "));
+			$content=stripslashes($noidung['noi-dung']);
+			$userinfo= load_user_basic_info( '1','1','1','0',$noidung['fbid']);
+			$likeinfo=load_likers($loai,$loai_id,'tra-loi');
+			$so_like=load_likers($loai,$loai_id,'0');	
+			$url=geturl($loai,$loai_id);$comment_num=checkreply($loai,$loai_id);$check_likers=checklikers($loai,$loai_id);							
      		if ($noidung['loai-doi-tuong']=='bai-viet')
      		{
      			$return='
@@ -1053,7 +960,8 @@ function load_single_post($loai,$loai_id)
 					<a href="#" style="margin-left:20px;">Không thích</a> 
 					<a style="margin-left:20px;" data-toggle="collapse" href="#comment-collapse-'.$noidung['id'].'" aria-expanded="false" aria-controls="comment-collapse-'.$noidung['id'].'">Trả lời '.$comment_num['1'].'</a>  
 					<a href="#" style="margin-left:20px;">Lưu trữ, chia sẻ</a>  
-				</div> 	'.loadcomment('comment',$noidung['id']).'	
+				</div> 	
+				'.loadcomment('comment',$noidung['id']).'	
 <div class="col-md-1 sidebar"></div><div class="col-md-10" style="border-bottom: solid;border-color:#e1e1e1;border-width: 2px;padding: 5px;margin-top:5px;"></div><div class="col-md-1"></div>		  
 					  
 				</div>
@@ -1061,30 +969,31 @@ function load_single_post($loai,$loai_id)
      		}
      		else
      		{
-		$userinfo= load_user_basic_info('1','1','1','0',$noidung['fbid']);     		
+				$userinfo= load_user_basic_info('1','1','1','0',$noidung['fbid']);     		
 
      			$return='
-			<div class="col-xs-12 col-sm-1">
-				<img alt="'.$userinfo['ten-hien-thi'].'" src="'.$userinfo['avatar'].'" class="profile_photo_img comment_image" height="25" width="25">
-			</div>
-			<div class="col-xs-12 col-sm-11">
-				<strong class="pull-left primary-font">'.$userinfo['ten-hien-thi'].'</strong>
-				<small class="pull-right text-muted">
-				<span class="glyphicon glyphicon-time"></span>time?</small>
-				<br/>
-				<li class="ui-state-default">'.$content.'. </li>
-				<br/>
-			</div>
+				<div class="col-xs-12 col-sm-1">
+					<img alt="'.$userinfo['ten-hien-thi'].'" src="'.$userinfo['avatar'].'" class="profile_photo_img comment_image" height="25" width="25">
+				</div>
+				<div class="col-xs-12 col-sm-11">
+					<strong class="pull-left primary-font">'.$userinfo['ten-hien-thi'].'</strong>
+					<small class="pull-right text-muted">
+					<span class="glyphicon glyphicon-time"></span>time?</small>
+					<br/>
+					<li class="ui-state-default">'.$content.'. </li>
+					<br/>
+				</div>
      			';
      		
      		}
      		break;     		     		     		 		     		
     	default:
-
-	endswitch; 
+			break;
+	}
 	
 	return $return;
 }
+
 function loadcomment($loai,$loai_id)
 {
 	global $mmhclass;
@@ -1135,16 +1044,7 @@ function loadcomment($loai,$loai_id)
 	return $return;	
 }
 
-function load_course_intro($loai,$loai_id)
-{
-	global $mmhclass;
-	$course_info= $mmhclass->db->fetch_array($mmhclass->db->query("SELECT * FROM `m_course` WHERE `id`= '".$loai_id."' AND  `loai`= 'khoa-hoc'"));		
 
-	$thong_tin=stripslashes($course_info['thong-tin-khoa-hoc']);
-	$faq=stripslashes($course_info['faq']);
-	$return=$thong_tin.'<br/>'.$faq;
-	return $return;
-}
 
 function check_registered_course($loai,$loai_id)
 {
@@ -1157,28 +1057,7 @@ function check_registered_course($loai,$loai_id)
 	return $return;
 }
 
-function register_course($loai,$loai_id)
-{
-	global $mmhclass;
-	if ($_SESSION['FBID']!=''){
-	//Đã đăng nhập, bh phải ktra trong m_like xem đã đăng ký chưa. nếu chưa đăng ký thì thay đổi m_like rồi redirect về dashboard. Nếu đký r, redirect về dashboard		
-	$check= $mmhclass->db->fetch_array($mmhclass->db->query("SELECT * FROM `m_like` WHERE `doi-tuong-id`= '".$loai_id."'  AND `fbid`= '".$_SESSION['FBID']."' AND  `loai-doi-tuong`= 'khoa-hoc'"));
-		//echo 'CHECK'; print_r($check);
-		if ($check['id']==''){
-		$mmhclass->db->query("INSERT INTO `m_like` (`loai`, `fbid`, `loai-doi-tuong`,`doi-tuong-id`) VALUES ('dang-ky', '{$_SESSION['FBID']}', 'khoa-hoc','{$loai_id}');");
-		}
-	$url_info= $mmhclass->db->fetch_array($mmhclass->db->query("SELECT * FROM `m_url` WHERE `id-loai`= '".$loai_id."' AND `loai`= 'trang-chu-khoa-hoc'"));			
-	//echo "URLINFO";print_r($url_info);
-	header("Location: ./".$url_info['url']);
-	}else
-	{
-	//echo "CHua DANG NHAP".$_GET['params'];
-	//Chưa đăng nhập: Tạo 1 $_SESSION['link']=$_GET['params']; vào login();
-	$_SESSION['link']=$_GET['params'];	
-	login();
-	}
 
-}
 
 function get_course_register_link($loai,$loai_id)
 {
@@ -1254,6 +1133,7 @@ function load_course_list($loai_id)
 	';	
 	return $return;
 }
+
 function load_bai_hoc($loai_id)
 {
 	global $mmhclass;
@@ -1265,6 +1145,7 @@ function load_bai_hoc($loai_id)
 	$return='<h2>'.$tieu_de.'</h2><br/>'.$noi_dung.'<br/>'.$tom_tat.'<br/>'.$danh_sach_bai_giang;
 	return $return;
 }	
+
 function load_cac_khoa_hoc()
 {
 	global $mmhclass;
@@ -1296,6 +1177,7 @@ function load_cac_khoa_hoc()
 
 	return $return;
 }
+
 function load_user_single_info($avatar,$ten,$chucvu,$mota,$noilamviec,$social,$loai_id)
 {
 	global $mmhclass;
@@ -1316,172 +1198,7 @@ function load_user_single_info($avatar,$ten,$chucvu,$mota,$noilamviec,$social,$l
 	$return['fb']=$fb;$return['twitter']=$twitter;$return['website']=$website;
 	return $return;
 }
-function user_bio_page($loai_id)
-{
-	global $mmhclass;
-    	$user_info=load_user_single_info('1','1','1','1','1','1',$loai_id);
-	$main = '
-	<div class="row" style="padding-left: 30px;">
-			
-	<hquestion>'.$user_info['ten-hien-thi'].'</hquestion> <br/><htitle>'.$user_info['chuc-vu'].'-'.$user_info['noi-lam-viec'].'.</htitle>
-	<br/>
-	<br/>        <button type="button" class="btn btn-default">Theo dõi</button>
-	        <button type="button" class="btn btn-default">Nhắn tin</button>
-			
-	        <button type="button" class="btn btn-info">Twitter</button>
-	        <button type="button" class="btn btn-primary">Facebook</button>
-	
-	<br/>
-	<br/>  '.$user_info['mo-ta'].'
-	<br/>
-	
-	  <div class="col-md-1 sidebar"></div><div class="col-md-10" style="border-bottom: solid;border-color:#e1e1e1;border-width: 2px;padding: 5px;margin-top:5px;" ></div><div class="col-md-1"></div>
-	<br/>
-	  <h3> Hoạt động gần đây </h3>
-	
-	  </div>
-	';
-	return $main;
-}
-function edit_user_bio($loai_id)
-{
-	global $mmhclass;
-    	$user_info=load_user_single_info('1','1','1','1','1','1',$loai_id);
 
-$main='
-<h1 class="page-header">Thay đổi thông tin cá nhân</h1>
-  <div class="row">
-    <!-- left column -->
-    <div class="col-md-4 col-sm-6 col-xs-12">
-      <div class="text-center">
-        <img src="'.$user_info['avatar'].'" class="avatar img-circle img-thumbnail" alt="avatar">
-        <h2>'.$user_info['ten-hien-thi'].'</h2>
-      </div>
-      <div class="alert alert-info alert-dismissable">
-        <a class="panel-close close" data-dismiss="alert">Ã—</a> 
-        <i class="fa fa-coffee"></i>
-       <strong>Lưu ý:</strong> Để trải nghiệm của bạn và của mọi người trên trang web được trọn vẹn, hãy điền vào đầy đủ những thông tin sau đây!
-      </div>
-    </div>
-    <!-- edit form column -->
-    <div class="col-md-8 col-sm-6 col-xs-12 personal-info">
-
-      <h3>Thông tin cá nhân</h3>
-      <form class="form-horizontal" role="form" method="POST" action="/xuly.php">
-
-        <div class="form-group">
-          <label class="col-lg-3 control-label">Facebook id:</label>
-          <div class="col-lg-8">
-      <p class="form-control-static">'.$user_info['fbid'].'</p>          </div>
-        </div> 		
-        <div class="form-group">
-          <label class="col-lg-3 control-label">Tên hiển thị:</label>
-          <div class="col-lg-8">
-      <p class="form-control-static">'.$user_info['ten-hien-thi'].'</p>          
-		  </div>
-        </div>
-        <div class="form-group">
-          <label class="col-lg-3 control-label">Email:</label>
-          <div class="col-lg-8">
-            <input class="form-control" value="'.$user_info['email'].'" type="text" name="email">
-          </div>
-        </div>
-        <div class="form-group">
-          <label class="col-lg-3 control-label">Giới tính:</label>
-          <div class="col-lg-8">
-			<select class="form-control" value="'.$user_info['gioi-tinh'].'" name="gioi-tinh">
-			  <option>Nam</option>
-			  <option>Nữ</option>
-			</select>        
-			</div>
-		</div>	 		
-        <div class="form-group">
-          <label class="col-lg-3 control-label">Ngày tháng năm sinh:</label>
-          <div class="col-lg-8">
-      <p class="form-control-static">'.$user_info['ngay-sinh'].'</p>          
-          </div>
-	</div>	
-        <div class="form-group">
-          <label class="col-lg-3 control-label"></label>
-          <div class="col-lg-2">
-			<select class="form-control" name="ngay"><option></option>
-			  <option>1</option>	option>2</option>  <option>3</option>	  <option>4</option>	  <option>5</option>	  <option>6</option>
-			  <option>7</option>	option>8</option>  <option>9</option>	  <option>10</option>	  <option>11</option>	  <option>12</option>
-			  <option>13</option>	option>14</option>  <option>15</option>	  <option>16</option>	  <option>17</option>	  <option>18</option>
-			  <option>19</option>	option>20</option>  <option>21</option>	  <option>22</option>	  <option>23</option>	  <option>24</option>
-			  <option>25</option>	option>26</option>  <option>27</option>	  <option>28</option>	  <option>29</option>	  <option>30</option>	<option>30</option>	<option>31</option>			  
-			</select>        
-			</div>
-          <div class="col-lg-3">
-			<select class="form-control" name="thang"><option></option>
-			  <option>1</option>	option>2</option>  <option>3</option>	  <option>4</option>	  <option>5</option>	  <option>6</option>
-			  <option>7</option>	option>8</option>  <option>9</option>	  <option>10</option>	  <option>11</option>	  <option>12</option>
-			</select>        
-	</div>
-	<div class="col-lg-3">
-			<select class="form-control" name="nam"><option></option>
-			  <option>1977</option><option>1978</option><option>1979</option><option>1980</option><option>1981</option><option>1982</option><option>1983</option><option>1984</option><option>1985</option><option>1986</option><option>1987</option><option>1988</option><option>1989</option><option>1990</option><option>1991</option><option>1992</option><option>1993</option><option>1994</option><option>1995</option><option>1996</option><option>1997</option><option>1998</option><option>1999</option><option>2000</option><option>2001</option><option>2002</option><option>2003</option>
-			</select>        
-	</div>
-	</div>	  				  		
-        <div class="form-group">
-          <label class="col-lg-3 control-label">Chức vụ:</label>
-          <div class="col-lg-8">
-            <input class="form-control" value="'.$user_info['chuc-vu'].'" type="text" name="chuc-vu">
-          </div>
-        </div>
-        <div class="form-group">
-          <label class="col-lg-3 control-label">Nơi làm việc:</label>
-          <div class="col-lg-8">
-            <input class="form-control" value="'.$user_info['noi-lam-viec'].'" type="text" name="noi-lam-viec">
-          </div>
-        </div>
-		
-        <div class="form-group">
-          <label class="col-lg-3 control-label">Mô tả:</label>
-          <div class="col-lg-8">
-<textarea class="form-control" rows="3" value="'.$user_info['mo-ta'].'" name="mo-ta"></textarea>          </div>
-        </div>
-		 
-		 <h3>Social links
-	  </h3>
-        <div class="form-group">
-          <label class="col-lg-3 control-label">Website:</label>
-          <div class="col-lg-8">
-            <input class="form-control" value="'.$user_info['website'].'" type="text" name="website">
-          </div>
-        </div>
-        <div class="form-group">
-          <label class="col-lg-3 control-label">Facebook:</label>
-          <div class="col-lg-8">
-            <input class="form-control" value="'.$user_info['fb'].'" type="text" name="facebook">
-          </div>
-        </div>
-        <div class="form-group">
-          <label class="col-lg-3 control-label">Twitter:</label>
-          <div class="col-lg-8">
-            <input class="form-control" value="'.$user_info['twitter'].'" type="text" name="twitter">
-          </div>
-        </div>
-		
-		
-		
-        <div class="form-group">
-          <label class="col-md-3 control-label"></label>
-          <div class="col-md-8">
-            <input value="edit-user" type="hidden" name="request">          
-  	     <button type="submit" class="btn btn-primary">Submit</button>
-            <span></span>
-            <input class="btn btn-default" value="Cancel" type="reset">
-          </div>
-        </div>		
-      </form>
-    </div>
-  </div>
-';
-
-return $main;
-}
 function tra_loi_cau_hoi($loai,$loai_id)
 {
 	global $mmhclass;
@@ -1525,7 +1242,7 @@ function checkreply($loai,$loai_id)
 	$i=0;
 	while ($single_content= $mmhclass->db->fetch_array($content_list))	
 	{
-	$i++;
+		$i++;
 	}
 	$return['0']=0;	$return['1']='';
 	if ($i>0){$return['1']='('.$i.')';}
@@ -1535,12 +1252,12 @@ function checkreply($loai,$loai_id)
 function checkliked($loai,$loai_id)
 {
 	global $mmhclass;
-$return = 'no';
-	if ($_SESSION['FBID']!='')
-	{
-	$check_like= $mmhclass->db->fetch_array($mmhclass->db->query("SELECT * FROM `m_like` WHERE `loai-doi-tuong`= '".$loai."' AND `doi-tuong-id`= '".$loai_id."' AND `loai` != 'dang-ky'"));
-	if ($check_like['id']!=''){$return = 'yes';}
-	
+	$return = 'no';
+	if ($_SESSION['FBID']!=''){
+		$check_like= $mmhclass->db->fetch_array($mmhclass->db->query("SELECT * FROM `m_like` WHERE `loai-doi-tuong`= '".$loai."' AND `doi-tuong-id`= '".$loai_id."' AND `loai` != 'dang-ky'"));
+		if ($check_like['id']!=''){
+			$return = 'yes';
+		}
 	}
 return $return;
 }
@@ -1553,13 +1270,25 @@ function checklikers($loai,$loai_id)
 	{
 	$i++;
 	}
-	$return['0']=0;	$return['1']='';	$default = 'Thích';
-	if (checkliked($loai,$loai_id)=='yes'){$default='Đã thích';} 
-	if ($loai=='cau-hoi'){$default='Quan tâm'; if (checkliked($loai,$loai_id)=='yes'){$default='Đã quan tâm';} }
-	if ($i>0){$return['1']=$default.' | '.$i;}else{$return['1']=$default;}
+	$return['0']=0;	
+	$return['1']='';	
+	$default = 'Thích';
+	if (checkliked($loai,$loai_id)=='yes'){
+		$default='Đã thích';
+	} 
+	if ($loai=='cau-hoi'){
+		$default='Quan tâm'; 
+		if (checkliked($loai,$loai_id)=='yes'){
+			$default='Đã quan tâm';
+		}
+	}
+	if ($i>0){
+		$return['1']=$default.' | '.$i;
+	} else {
+		$return['1']=$default;
+	}
 	$return['0']=$default;
 	return $return;
 }
-
 
 ?>
