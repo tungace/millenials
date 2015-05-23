@@ -47,7 +47,7 @@ class User {
 					<img alt="'.$this->displayName.'" src="'.$this->avatar.'" height="32" width="32">
 				</div>
 				<div class="col-xs-4 col-sm-10">
-					<author><a href="./user/'.$this->fbId.'">'.$this->displayName.', '.$this->role.this->workingAddress.'</a></author>
+					<author><a href="./user/'.$this->fbId.'">'.$this->displayName.', '.$this->role.' @ '.$this->workingAddress.'</a></author>
 					<br>
 				</div>';
 	}

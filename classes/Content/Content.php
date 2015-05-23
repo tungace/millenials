@@ -17,7 +17,7 @@ class Content {
 	public $dislike; 
 	
 	public function Content($contentInfo){
-		$this->id = $contentInfo[''];
+		$this->id = $contentInfo['id'];
 		$this->urlId = $contentInfo['url-id'];
 		$this->fbId = $contentInfo['fbid'];
 		$this->postedTime = $contentInfo['thoi-gian'];
@@ -31,11 +31,8 @@ class Content {
 		$this->thumbnail = $contentInfo['thumbnail'];
 		$this->like = $contentInfo['thich'];
 		$this->dislike = $contentInfo['khong-thich'];
+        
 	}
-	
-	
-	
-	
 	
 }
 

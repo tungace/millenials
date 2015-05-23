@@ -16,6 +16,8 @@ class Like {
 		$this->targetId 	= $likeInfo['doi-tuong-id'];
 		$this->likedTime 	= $likeInfo['thoi-gian'];
 	}
+	
+	
 }
 
 ?>

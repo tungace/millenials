@@ -9,10 +9,6 @@
 session_start();
 require_once "./source/includes/data.php";
 require_once 'autoload.php';
-require_once "./classes/Page/HomePage.php";
-require_once "./classes/Page/CourseRegisterPage.php";
-require_once "./classes/Page/EditUserPage.php";
-require_once "./classes/Page/UserPage.php";
 
 function rand_string( $length ) {
 	$chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";	
@@ -25,13 +21,12 @@ function rand_string( $length ) {
 	return $str;
 }
 
-function timeto($date)
-{
-$time[1]=date("j F y", $date);
-$time[2]=date("j", $date);
-$time[3]=date("F", $date);
-$time[4]=substr($time[3],'0','3');
-return $time;
+function timeto($date) {
+    $time[1]=date("j F y", $date);
+    $time[2]=date("j", $date);
+    $time[3]=date("F", $date);
+    $time[4]=substr($time[3],'0','3');
+    return $time;
 }
 
 ///////////FUNCTION_3///////////////////
@@ -56,41 +51,39 @@ function getRealIpAddr()
 
 ///////////FUNCTION_4///////////////////
 
-function is_valid_email($email) 
-{
-  $result = TRUE;
-  if(!eregi("^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$", $email)) 
-  	{
-    	$result = FALSE;
-  	}
-  return $result;
+function is_valid_email($email) {
+    $result = TRUE;
+    if(!eregi("^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$", $email)) {
+        $result = FALSE;
+    }
+    return $result;
 }
 
 /////////FUNCTION_5 //////////////////
 
- function unicode_str_filter ($str){
-$unicode = array(
-'a'=>'á|à|ả|ã|ạ|ă|ắ|ặ|ằ|ẳ|ẵ|â|ấ|ầ|ẩ|ẫ|ậ',
-'d'=>'đ',
-'e'=>'é|è|ẻ|ẽ|ẹ|ê|ế|ề|ể|ễ|ệ',
-'i'=>'í|ì|ỉ|ĩ|ị',
-'o'=>'ó|ò|ỏ|õ|ọ|ô|ố|ồ|ổ|ỗ|ộ|ơ|ớ|ờ|ở|ỡ|ợ',
-'u'=>'ú|ù|ủ|ũ|ụ|ư|ứ|ừ|ử|ữ|ự',
-'y'=>'ý|ỳ|ỷ|ỹ|ỵ',
-'A'=>'Á|À|Ả|Ã|Ạ|Ă|Ắ|Ặ|Ằ|Ẳ|Ẵ|Â|Ấ|Ầ|Ẩ|Ẫ|Ậ',
-'D'=>'Đ',
-'E'=>'É|È|Ẻ|Ẽ|Ẹ|Ê|Ế|Ề|Ể|Ễ|Ệ',
-'I'=>'Í|Ì|Ỉ|Ĩ|Ị',
-'O'=>'Ó|Ò|Ỏ|Õ|Ọ|Ô|Ố|Ồ|Ổ|Ỗ|Ộ|Ơ|Ớ|Ờ|Ở|Ỡ|Ợ',
-'U'=>'Ú|Ù|Ủ|Ũ|Ụ|Ư|Ứ|Ừ|Ử|Ữ|Ự',
-'Y'=>'Ý|Ỳ|Ỷ|Ỹ|Ỵ',
-);
-foreach($unicode as $nonUnicode=>$uni){
-$str = preg_replace("/($uni)/i", $nonUnicode, $str);
-}
-$str=str_replace(" ","-",$str);
-$str=clean($str);
-return $str;
+function unicode_str_filter ($str){
+    $unicode = array(
+            'a'=>'á|à|ả|ã|ạ|ă|ắ|ặ|ằ|ẳ|ẵ|â|ấ|ầ|ẩ|ẫ|ậ',
+            'd'=>'đ',
+            'e'=>'é|è|ẻ|ẽ|ẹ|ê|ế|ề|ể|ễ|ệ',
+            'i'=>'í|ì|ỉ|ĩ|ị',
+            'o'=>'ó|ò|ỏ|õ|ọ|ô|ố|ồ|ổ|ỗ|ộ|ơ|ớ|ờ|ở|ỡ|ợ',
+            'u'=>'ú|ù|ủ|ũ|ụ|ư|ứ|ừ|ử|ữ|ự',
+            'y'=>'ý|ỳ|ỷ|ỹ|ỵ',
+            'A'=>'Á|À|Ả|Ã|Ạ|Ă|Ắ|Ặ|Ằ|Ẳ|Ẵ|Â|Ấ|Ầ|Ẩ|Ẫ|Ậ',
+            'D'=>'Đ',
+            'E'=>'É|È|Ẻ|Ẽ|Ẹ|Ê|Ế|Ề|Ể|Ễ|Ệ',
+            'I'=>'Í|Ì|Ỉ|Ĩ|Ị',
+            'O'=>'Ó|Ò|Ỏ|Õ|Ọ|Ô|Ố|Ồ|Ổ|Ỗ|Ộ|Ơ|Ớ|Ờ|Ở|Ỡ|Ợ',
+            'U'=>'Ú|Ù|Ủ|Ũ|Ụ|Ư|Ứ|Ừ|Ử|Ữ|Ự',
+            'Y'=>'Ý|Ỳ|Ỷ|Ỹ|Ỵ'
+    );
+    foreach($unicode as $nonUnicode=>$uni){
+        $str = preg_replace("/($uni)/i", $nonUnicode, $str);
+    }
+    $str=str_replace(" ","-",$str);
+    $str=clean($str);
+    return $str;
 }
 
 //////////////////////////////
@@ -152,15 +145,14 @@ function show404()
 
 //////////////////////////////
 
-function show($loai,$loai_id)
-{
+function show($loai) {
 	global $mmhclass;
-
-	$page = null;
+    $page = null;
 	
+    
 	switch ($loai){
-		case 'homepage':		//neu la homepage
-			$page = new HomePage();
+		case 'homepage' :		//neu la homepage
+            $page = new HomePage();
      		break;
 			
     	case 'dang-ky-khoa-hoc':
@@ -207,14 +199,11 @@ function show($loai,$loai_id)
 
 	}
 	
-	//$left=showleft($loai,$loai_id);
-	//$main=showmain($loai,$loai_id);
-	//$right=showright($loai,$loai_id);
-	$left	= $page->getLeftPanel();
+    $left	= $page->getLeftPanel();
 	$main	= $page->getMainPanel();
 	$right	= $page->getRightPanel();
 	
-	$return = showtemplate($left, $main, $right, $loai, $loai_id); //sau khi đã có đầy đủ thông tin các phần quan trọng thì chèn vào template
+    $return = showtemplate($left, $main, $right, $loai, $loai_id); //sau khi đã có đầy đủ thông tin các phần quan trọng thì chèn vào template
 	return $return;
 }
 
@@ -223,7 +212,7 @@ function showtemplate($left, $main, $right, $loai, $loai_id)
 	global $mmhclass;
 	global $web_root;
 	
-	$header=showheader($loai,$loai_id);
+	$header = showheader($loai,$loai_id);
 	$raw= file_get_contents('./main.tpl');
 		$re_header='<#HEADER#>';
 		$re_left='<#LEFT_SIDEBAR#>';
@@ -385,11 +374,12 @@ function showleft($loai,$loai_id)
 function showmain($loai,$loai_id)
 {
 	global $mmhclass;
-	
+	global $contentDb;
+    
 	switch ($loai){
 		
     	case 'intro-khoa-hoc':
-			$main=load_course_intro('khoa-hoc',$loai_id);
+			$main = load_course_intro('khoa-hoc',$loai_id);
 			$return = '
 				<div class="col-md-8 main panstyle" id="about-the-course">
 				'.$main.'
@@ -445,23 +435,27 @@ function showmain($loai,$loai_id)
 				'.$main.'
 				</div>';
      		break;     			     			     		        		    		        		
-    	case 'bai-viet':
+    	case 'bai-viet' :
 			//neu la bai-viet
-			$main=load_single_post($loai,$loai_id).loadcomment($loai,$loai_id);
+            $post = $contentDb->getPostById($loai_id);
+			$main = $post->toStringWithComments();
 			$return= '		
 				<div class="col-md-7 main">
 				'.$main.'
 				</div>';
      		break;
-    	case 'cau-hoi':
+            
+    	case 'cau-hoi' :
 			//neu la cau-hoi
-			$main=load_single_post($loai,$loai_id).loadcomment($loai,$loai_id);
+			$question = $contentDb->getQuestionById($loai_id);
+			$main = $question->toStringWithComments();
 			$return= '		
 				<div class="col-md-7 main">
 				'.$main.'
 				</div>';
      		break;
-    	case 'tra-loi':
+            
+    	case 'tra-loi' :
 			//tra-loi
 			$answer_info= $mmhclass->db->fetch_array($mmhclass->db->query("SELECT * FROM `m_content` WHERE `loai`= '".$loai."' AND  `id`= '".$loai_id."' "));		
 			$main=load_single_post($answer_info['loai-doi-tuong'],$answer_info['id-doi-tuong']).load_single_post($loai,$loai_id).loadcomment($loai,$loai_id);
@@ -525,527 +519,6 @@ function showright($loai,$loai_id)
 	return $return;
 }
 
-function load_user_basic_info($avatar,$ten,$title,$purpose,$fbid)
-{
-	global $mmhclass;
-	$user_info= $mmhclass->db->fetch_array($mmhclass->db->query("SELECT * FROM `m_user` WHERE `fbid`= '".$fbid."'"));
-	
-	if ($avatar=='1'){$avatar=$user_info['avatar'];}
-	if ($ten=='1'){$ten=$user_info['ten-hien-thi'];}
-	if ($title=='1'){
-		$title = $user_info['chuc-vu'].$user_info['noi-lam-viec'];}
-	
-	switch ($purpose):
-	
-    		case 'tra-loi':
-		$return = '		
-			<div class="col-xs-8 col-sm-1">
-			<img alt="'.$ten.'" src="'.$avatar.'" height="32" width="32">      </div>
-			<div class="col-xs-4 col-sm-10">
-			<author><a href="./user/'.$fbid.'">'.$ten.', '.$title.'</a></author><br>';
-     		break;
-     		
-    		case 'tuong-tac':
-		$return= '		
- 			<a href="./user/'.$fbid.'"> <img alt="'.$ten.'" src="'.$avatar.'" class="profile_photo_img" height="18" width="18"> '.$ten.'</a> ';
-     		break;     		   
-    	default:
-	$return['avatar']=$avatar;
-	$return['ten-hien-thi']=$ten;
-	$return['chuc-vu']=$title;
-	$return['fbid']=$fbid;
-	endswitch; 
-	return $return;
-}
-
-function load_likers($loai,$loai_id,$purpose)
-{
-	global $mmhclass;
-	$number_likes= $mmhclass->db->fetch_array($mmhclass->db->query("SELECT thich FROM `m_content` WHERE `loai`= '".$loai."' AND `id`= '".$loai_id."' "));
-
-
-	switch ($purpose):
-		case 'tra-loi':
-		$total_likers=$mmhclass->db->query("SELECT * FROM `m_like`  WHERE `loai` = 'thich' AND `loai-doi-tuong`= '".$loai."' AND `doi-tuong-id`= '".$loai_id."'  ORDER BY `id` DESC LIMIT 4");$i=0;		
-		while ($single_like= $mmhclass->db->fetch_array($total_likers))
-		{
-			$i++;
-			$likerinfo=load_user_basic_info('0','1','0','0',$single_like['fbid']);
-			$likers.='<a href="./user/'.$fbid.'">'.$likerinfo['ten-hien-thi'].'</a>, '; 
-		}
-		$return = '<b>'.$i.' lượt thích</b>';
-		if ($i>0){
-			$return=$return.'bởi'.$likers;
-		}
-     	break;
-     		
-    default:
-		$return=$number_likes['thich'];
-	endswitch; 
-	return $return;
-}
-
-function geturl($loai,$loai_id)
-{
-	global $mmhclass;
-	if ($loai=='comment'){	
-		$noidung= $mmhclass->db->fetch_array($mmhclass->db->query("SELECT * FROM `m_content` WHERE `loai`= '".$loai."' AND `id`= '".$loai_id."' AND `tinh-trang`= 'published'  "));
-		$loai=$noidung['loai-doi-tuong'];
-		$loai_id=$noidung['id-doi-tuong'];
-	}
-	
-	$url= $mmhclass->db->fetch_array($mmhclass->db->query("SELECT * FROM `m_url` WHERE `loai`= '".$loai."' AND `id-loai`= '".$loai_id."' AND `tinh-trang`= 'published'  "));	
-	return $url['url'];
-}
-
-function load_single_post($loai,$loai_id)
-{
-	global $mmhclass;
-	switch ($loai){
-    	case 'tra-loi':
-			
-     		
-     		break;
-
-    	case 'tra-loi-homepage':
-			$noidung= $mmhclass->db->fetch_array($mmhclass->db->query("SELECT * FROM `m_content` WHERE `loai`= 'tra-loi' AND `id`= '".$loai_id."' AND `tinh-trang`= 'published'  "));
-			$content=stripslashes($noidung['noi-dung']);
-			$tieude=stripslashes($noidung['tieu-de']);	
-			$the=stripslashes($noidung['the']);								
-			$userinfo= load_user_basic_info('1','1','1','tra-loi',$noidung['fbid']);
-			$likeinfo=load_likers($loai,$loai_id,'tra-loi');
-			$url=geturl('tra-loi',$loai_id);			
-			$so_like=load_likers($loai,$loai_id,'0');	$comment_num=checkreply($loai,$loai_id);$check_likers=checklikers('tra-loi',$loai_id);
-     			$return='
-			<div class="row postlayout">
-					  
-				<div class="col-sm-11">
-					<div class="unimportant"> 
-						<div class="row">
-					
-							<div class="col-xs-8 col-sm-11">
-								<a href="./tags/'.$the.'" class="btn btn-default btn-xs active" role="button">'.$the.'</a>       
-							</div>
-							<div class="col-xs-8 col-xs-1">
-								<div class="btn-group">
-									<button class="btn dropdown-toggle" data-toggle="dropdown" style="float:right;"> <span class="caret"></span></button>
-									<ul class="dropdown-menu">
-								<li><a href="#" data-toggle="modal" data-target="#myModal" loai="tra-loi" loaiid="'.$loai_id.'" request="editpost" class="jqueryoption">Chỉnh sửa</a></li>
-								<li><a href="#">Ngừng theo dõi bài</a></li>
-								<li class="divider"></li>
-								<li><a href="#" data-toggle="modal" data-target="#myModal" loai="tra-loi" loaiid="'.$loai_id.'" request="report" class="jqueryoption">Báo cáo</a></li>
-								<li><a href="#" data-toggle="modal" data-target="#myModal" loai="tra-loi" loaiid="'.$loai_id.'" request="delete" class="jqueryoption">Xóa</a></li>				  
-									</ul>
-								</div><!-- /btn-group -->
-							</div>
-						</div>
-					</div>
-					<a href="./'.$url.'"><htitle>'.$tieude.'</htitle></a>				
-					<div class="row">
-							'.$userinfo.'
-							<div class="unimportant-lines">
-							'.$likeinfo.'
-							</div>      
-						</div>
-					</div>
-					<div class="noi-dung">
-						'.$content.'	
-						<a href="./'.$url.'">(Đọc tiếp)</a>
-					</div>
-							
-				</div>
-					 
-				<div class="activity col-sm-12"> 
-					<button type="button" class="btn btn-default btn-sm actlike" request="like" likeid="'.$loai_id.'">'.$check_likers['1'].'</button>
-					<a href="#" style="margin-left:20px;">Không thích</a> 
-					<a style="margin-left:20px;" data-toggle="collapse" href="#comment-collapse-'.$noidung['id'].'" aria-expanded="false" aria-controls="comment-collapse-'.$noidung['id'].'">Trả lời '.$comment_num['1'].'</a>  
-					<a href="#" style="margin-left:20px;">Lưu trữ, chia sẻ</a>  
-				</div> 	'.loadcomment('tra-loi',$noidung['id']).'			
-<div class="col-md-1 sidebar"></div><div class="col-md-10" style="border-bottom: solid;border-color:#e1e1e1;border-width: 2px;padding: 5px;margin-top:5px;"></div><div class="col-md-1"></div>		  
-					  
-				</div>
-     			';
-     		
-     		break;
-     		
-    	case 'cau-hoi':
-			$noidung= $mmhclass->db->fetch_array($mmhclass->db->query("SELECT * FROM `m_content` WHERE `loai`= '".$loai."' AND `id`= '".$loai_id."' AND `tinh-trang`= 'published' "));
-			$content=stripslashes($noidung['noi-dung']);
-			$tieude=stripslashes($noidung['tieu-de']);			
-			$the=stripslashes($noidung['the']);											
-			$url=geturl($loai,$loai_id);						
-			$userinfo= load_user_basic_info('1','1','1','0',$noidung['fbid']);$comment_num=checkreply($loai,$loai_id);
-			$so_like=load_likers($loai,$loai_id,'0');	$tra_loi_cau_hoi=tra_loi_cau_hoi($loai,$loai_id);$check_likers=checklikers($loai,$loai_id);
-			$return='
-			<div class="row postlayout">
-				<div class="col-sm-11">
-					<div class="unimportant"> 
-						<div class="row">
-					
-							<div class="col-xs-8 col-sm-11">
-					
-								<a href="./tags/'.$the.'" class="btn btn-default btn-xs active" role="button">'.$the.'</a>       
-							</div>
-							<div class="col-xs-8 col-xs-1">
-								<div class="btn-group">
-									<button class="btn dropdown-toggle" data-toggle="dropdown" style="float:right;"> <span class="caret"></span></button>
-									<ul class="dropdown-menu">
-								<li><a href="#" data-toggle="modal" data-target="#myModal" loai="cau-hoi" loaiid="'.$loai_id.'" request="editpost" class="jqueryoption">Chỉnh sửa</a></li>
-								<li><a href="#">Ngừng theo dõi bài</a></li>
-								<li class="divider"></li>
-								<li><a href="#" data-toggle="modal" data-target="#myModal" loai="cau-hoi" loaiid="'.$loai_id.'" request="report" class="jqueryoption">Báo cáo</a></li>
-								<li><a href="#" data-toggle="modal" data-target="#myModal" loai="cau-hoi" loaiid="'.$loai_id.'" request="delete" class="jqueryoption">Xóa</a></li>				  
-									</ul>
-								</div><!-- /btn-group -->
-							</div>
-						</div>
-					</div>
-									
-
-
-						<a href="./'.$url.'"><hquestion>'.$tieude.'</hquestion></a>
-
-
-					<div class="noi-dung">
-					'.$content.'<br/>
-					</div>
-				</div>								
-					<div class="activity col-sm-12"> 
-						<div class="btn-group" data-toggle="buttons-checkbox">
-							<button type="button" class="btn btn-danger actlike" request="like" likeid="'.$loai_id.'">'.$check_likers['1'].'</button>
-						</div>	  
-						<a style="margin-left:20px;" data-toggle="collapse" href="#tra-loi-collapse-'.$noidung['id'].'" aria-expanded="false" aria-controls="tra-loi-collapse-'.$noidung['id'].'">Trả lời '.$comment_num['1'].'</a>  
-						<a href="#" style="margin-left:20px;">Lưu trữ, chia sẻ</a>  
-						<a href="#" style="margin-left:20px;">Không thích</a>  
-					</div> 
-				'.$tra_loi_cau_hoi.'
-						
-			<div class=\'col-md-1 sidebar\'></div><div class=\'col-md-10\' style="border-bottom: solid;border-color:#e1e1e1;border-width: 2px;padding: 5px;margin-top:5px;" ></div><div class=\'col-md-1\'></div>
-			</div>			
-			';
-     		break;
-     		
-    	case 'cau-hoi-homepage':
-			$noidung= $mmhclass->db->fetch_array($mmhclass->db->query("SELECT * FROM `m_content` WHERE `loai`= 'cau-hoi' AND `id`= '".$loai_id."' AND `tinh-trang`= 'published' "));
-			$content=stripslashes($noidung['noi-dung']);
-			$tieude=stripslashes($noidung['tieu-de']);	
-			$the=stripslashes($noidung['the']);
-			$url=geturl('cau-hoi',$loai_id);													
-			$userinfo= load_user_basic_info('1','1','1','0',$noidung['fbid']);$comment_num=checkreply($loai,$loai_id);
-			$so_like=load_likers($loai,$loai_id,'0');		$tra_loi_cau_hoi=tra_loi_cau_hoi('cau-hoi',$loai_id);	$check_likers=checklikers('cau-hoi',$loai_id);
-			$return='
-			<div class="row postlayout">
-				<div class="col-sm-11">
-					<div class="unimportant"> 
-						<div class="row">
-					
-							<div class="col-xs-8 col-sm-11">
-					
-								<a href="./tags/'.$the.'" class="btn btn-default btn-xs active" role="button">'.$the.'</a>       
-							</div>
-							<div class="col-xs-8 col-xs-1">
-								<div class="btn-group">
-									<button class="btn dropdown-toggle" data-toggle="dropdown" style="float:right;"> <span class="caret"></span></button>
-									<ul class="dropdown-menu">
-								<li><a href="#" data-toggle="modal" data-target="#myModal" loai="cau-hoi" loaiid="'.$loai_id.'" request="editpost" class="jqueryoption">Chỉnh sửa</a></li>
-								<li><a href="#">Ngừng theo dõi bài</a></li>
-								<li class="divider"></li>
-								<li><a href="#" data-toggle="modal" data-target="#myModal" loai="cau-hoi" loaiid="'.$loai_id.'" request="report" class="jqueryoption">Báo cáo</a></li>
-								<li><a href="#" data-toggle="modal" data-target="#myModal" loai="cau-hoi" loaiid="'.$loai_id.'" request="delete" class="jqueryoption">Xóa</a></li>				  
-									</ul>
-								</div><!-- /btn-group -->
-							</div>
-						</div>
-					</div>
-									
-
-
-						<a href="./'.$url.'"><hquestion>'.$tieude.'</hquestion></a>
-					<div class="noi-dung">
-					'.$content.'<br/>
-					</div>
-				</div>			
-	
-					<div class="activity col-sm-12"> 
-						<div class="btn-group" data-toggle="buttons-checkbox">
-							<button type="button" class="btn btn-danger actlike" request="like" likeid="'.$loai_id.'">'.$check_likers['1'].'</button>
-						</div>	  
-						<a style="margin-left:20px;" data-toggle="collapse" href="#tra-loi-collapse-'.$noidung['id'].'" aria-expanded="false" aria-controls="tra-loi-collapse-'.$noidung['id'].'">Trả lời '.$comment_num['1'].'</a>  
-						<a href="#" style="margin-left:20px;">Lưu trữ, chia sẻ</a>  
-						<a href="#" style="margin-left:20px;">Không thích</a>  
-					</div> '.$tra_loi_cau_hoi.'
-			<div class=\'col-md-1 sidebar\'></div><div class=\'col-md-10\' style="border-bottom: solid;border-color:#e1e1e1;border-width: 2px;padding: 5px;margin-top:5px;" ></div><div class=\'col-md-1\'></div>
-
-			</div>			
-			';     		
-     		
-     		break;     	
-     			
-    	case 'bai-viet':
-			$noidung= $mmhclass->db->fetch_array($mmhclass->db->query("SELECT * FROM `m_content` WHERE `loai`= '".$loai."' AND `id`= '".$loai_id."' AND `tinh-trang`= 'published'"));
-			$content=stripslashes($noidung['noi-dung']);
-			$preview=stripslashes($noidung['preview']);			
-			$thumbnail=$noidung['thumbnail'];						
-			$tieude=stripslashes($noidung['tieu-de']);	
-			$the=stripslashes($noidung['the']);								
-			$userinfo= load_user_basic_info('1','1','1','tra-loi',$noidung['fbid']);
-			$likeinfo=load_likers($loai,$loai_id,'tra-loi');$comment_num=checkreply($loai,$loai_id);
-			$so_like=load_likers($loai,$loai_id,'0');$check_likers=checklikers($loai,$loai_id);
-			$url=geturl($loai,$loai_id);							$tra_loi_cau_hoi=tra_loi_cau_hoi($loai,$loai_id);
-     			$return='
-			<div class="row postlayout">
-					  
-				<div class="col-sm-11">
-					<div class="unimportant"> 
-						<div class="row">
-					
-							<div class="col-xs-8 col-sm-11">
-					
-								<a href="./tags/'.$the.'" class="btn btn-default btn-xs active" role="button">'.$the.'</a>       
-							</div>
-							<div class="col-xs-8 col-xs-1">
-								<div class="btn-group">
-									<button class="btn dropdown-toggle" data-toggle="dropdown" style="float:right;"> <span class="caret"></span></button>
-									<ul class="dropdown-menu">
-								<li><a href="#" data-toggle="modal" data-target="#myModal" loai="bai-viet" loaiid="'.$loai_id.'" request="editpost" class="jqueryoption">Chỉnh sửa</a></li>
-								<li><a href="#">Ngừng theo dõi bài</a></li>
-								<li class="divider"></li>
-								<li><a href="#" data-toggle="modal" data-target="#myModal" loai="bai-viet" loaiid="'.$loai_id.'" request="report" class="jqueryoption">Báo cáo</a></li>
-								<li><a href="#" data-toggle="modal" data-target="#myModal" loai="bai-viet" loaiid="'.$loai_id.'" request="delete" class="jqueryoption">Xóa</a></li>				  
-									</ul>
-								</div><!-- /btn-group -->
-							</div>
-						</div>
-					</div>
-					<a href="./'.$url.'"><htitle>'.$tieude.'</htitle></a>				
-					<div class="row">
-							'.$userinfo.'
-							<div class="unimportant-lines">
-							'.$likeinfo.'
-							</div>      
-						</div>
-					</div>
-					<div class="noi-dung">
-						<b><i>'.$preview.'</b></i><br/><img src="'.$thumbnail.'" style="max-height:400px;max-width:400px;"><br/>'.$content.'	
-
-					</div>
-							
-				</div>
-					 
-				<div class="activity col-sm-12"> 
-					<button type="button" class="btn btn-default btn-sm actlike" request="like" likeid="'.$loai_id.'">'.$check_likers['1'].'</button>
-					<a href="#" style="margin-left:20px;">Không thích</a> 
-					<a style="margin-left:20px;" data-toggle="collapse" href="#tra-loi-collapse-'.$noidung['id'].'" aria-expanded="false" aria-controls="tra-loi-collapse-'.$noidung['id'].'">Trả lời '.$comment_num['1'].'</a>  
-					<a href="#" style="margin-left:20px;">Lưu trữ, chia sẻ</a>  
-				</div> 
-				'.$tra_loi_cau_hoi.'				
-<div class="col-md-1 sidebar"></div><div class="col-md-10" style="border-bottom: solid;border-color:#e1e1e1;border-width: 2px;padding: 5px;margin-top:5px;"></div><div class="col-md-1"></div>		  
-					  
-				</div>
-     			';     		
-     		break;  
-
-     			
-    	case 'bai-viet-homepage':
-			$noidung= $mmhclass->db->fetch_array($mmhclass->db->query("SELECT * FROM `m_content` WHERE `loai`= 'bai-viet' AND `id`= '".$loai_id."' AND `tinh-trang`= 'published'"));
-			$content=stripslashes($noidung['noi-dung']);
-			$preview=stripslashes($noidung['preview']);			
-			$thumbnail=$noidung['thumbnail'];						
-			$tieude=stripslashes($noidung['tieu-de']);	
-			$the=stripslashes($noidung['the']);								
-			$userinfo= load_user_basic_info('1','1','1','tra-loi',$noidung['fbid']);
-			$likeinfo=load_likers($loai,$loai_id,'tra-loi');$check_likers=checklikers('bai-viet',$loai_id);
-			$so_like=load_likers($loai,$loai_id,'0');	$comment_num=checkreply($loai,$loai_id);
-			$url=geturl('bai-viet',$loai_id);					$tra_loi_cau_hoi=tra_loi_cau_hoi("bai-viet",$loai_id);	
-     			$return='
-			<div class="row postlayout">
-					  
-				<div class="col-sm-11">
-					<div class="unimportant"> 
-						<div class="row">
-					
-							<div class="col-xs-8 col-sm-11">
-					
-								<a href="./tags/'.$the.'" class="btn btn-default btn-xs active" role="button">'.$the.'</a>       
-							</div>
-							<div class="col-xs-8 col-xs-1">
-								<div class="btn-group">
-									<button class="btn dropdown-toggle" data-toggle="dropdown" style="float:right;"> <span class="caret"></span></button>
-									<ul class="dropdown-menu">
-								<li><a href="#" data-toggle="modal" data-target="#myModal" loai="bai-viet" loaiid="'.$loai_id.'" request="editpost" class="jqueryoption">Chỉnh sửa</a></li>
-								<li><a href="#">Ngừng theo dõi bài</a></li>
-								<li class="divider"></li>
-								<li><a href="#" data-toggle="modal" data-target="#myModal" loai="bai-viet" loaiid="'.$loai_id.'" request="report" class="jqueryoption">Báo cáo</a></li>
-								<li><a href="#" data-toggle="modal" data-target="#myModal" loai="bai-viet" loaiid="'.$loai_id.'" request="delete" class="jqueryoption">Xóa</a></li>				  
-									</ul>
-								</div><!-- /btn-group -->
-							</div>
-						</div>
-					</div>
-					<a href="./'.$url.'"><htitle>'.$tieude.'</htitle></a>				
-					<div class="row">
-							'.$userinfo.'
-							<div class="unimportant-lines">
-							'.$likeinfo.'
-							</div>      
-						</div>
-					</div>
-					<div class="noi-dung">
-						<b><i>'.$preview.'</b></i><br/><img src="'.$thumbnail.'" style="max-height:400px;max-width:400px;"><br/>
-						<a href="./'.$url.'">(Đọc tiếp)</a>
-					</div>
-							
-				</div>
-					 
-				<div class="activity col-sm-12"> 
-					<button type="button" class="btn btn-default btn-sm actlike"  request="like" likeid="'.$loai_id.'">'.$check_likers['1'].'</button>
-					<a href="#" style="margin-left:20px;">Không thích</a> 
-					<a style="margin-left:20px;" data-toggle="collapse" href="#tra-loi-collapse-'.$noidung['id'].'" aria-expanded="false" aria-controls="tra-loi-collapse-'.$noidung['id'].'">Trả lời '.$comment_num['1'].'</a>  
-					<a href="#" style="margin-left:20px;">Lưu trữ, chia sẻ</a>  
-				</div> 
-				'.$tra_loi_cau_hoi.'				
-<div class="col-md-1 sidebar"></div><div class="col-md-10" style="border-bottom: solid;border-color:#e1e1e1;border-width: 2px;padding: 5px;margin-top:5px;"></div><div class="col-md-1"></div>		  
-					  
-				</div>
-     			';     		
-     		break;  
-     		     		  
-    	case 'comment':
-			$noidung= $mmhclass->db->fetch_array($mmhclass->db->query("SELECT * FROM `m_content` WHERE `loai`= '".$loai."' AND `id`= '".$loai_id."' AND `tinh-trang`= 'published' "));
-			$content=stripslashes($noidung['noi-dung']);
-			$userinfo= load_user_basic_info( '1','1','1','0',$noidung['fbid']);
-			$likeinfo=load_likers($loai,$loai_id,'tra-loi');
-			$so_like=load_likers($loai,$loai_id,'0');	
-			$url=geturl($loai,$loai_id);$comment_num=checkreply($loai,$loai_id);$check_likers=checklikers($loai,$loai_id);							
-     		if ($noidung['loai-doi-tuong']=='bai-viet')
-     		{
-     			$return='
-			<div class="row postlayout">
-					  
-				<div class="col-sm-11">
-					<div class="row">
-						<div class="col-xs-8 col-sm-1">
-							<img alt="'.$userinfo['ten-hien-thi'].'" src="'.$userinfo['avatar'].'" height="32" width="32">      </div>
-						<div class="col-xs-4 col-sm-10">
-							<author><a href="./user/'.$userinfo['fbid'].'">'.$userinfo['ten-hien-thi'].', '.$userinfo['title'].'</a></author><br>
-							<div class="unimportant-lines">
-							'.$likeinfo.'
-							</div>      
-						</div>
-						<div class="col-xs-8 col-xs-1">
-				
-							<div class="btn-group">
-							<button class="btn dropdown-toggle" data-toggle="dropdown" style="float:right;"> 
-								<span class="caret"></span></button>
-							<ul class="dropdown-menu">
-								<li><a href="#" data-toggle="modal" data-target="#myModal" loai="comment" loaiid="'.$loai_id.'" request="editpost" class="jqueryoption">Chỉnh sửa</a></li>
-								<li><a href="#">Ngừng theo dõi bài</a></li>
-								<li class="divider"></li>
-								<li><a href="#" data-toggle="modal" data-target="#myModal" loai="comment" loaiid="'.$loai_id.'" request="report" class="jqueryoption">Báo cáo</a></li>
-								<li><a href="#" data-toggle="modal" data-target="#myModal" loai="comment" loaiid="'.$loai_id.'" request="delete" class="jqueryoption">Xóa</a></li>				  
-							</ul>
-							</div><!-- /btn-group -->
-						</div>   
-							
-					</div>
-					<div class="noi-dung">
-						'.$content.'	
-						<a href="./'.$url.'">(Đọc tiếp)</a>
-					</div>
-							
-				</div>
-					 
-				<div class="activity col-sm-12"> 
-					<button type="button" class="btn btn-default btn-sm actlike" request="like" likeid="'.$loai_id.'">'.$check_likers['1'].'</button>
-					<a href="#" style="margin-left:20px;">Không thích</a> 
-					<a style="margin-left:20px;" data-toggle="collapse" href="#comment-collapse-'.$noidung['id'].'" aria-expanded="false" aria-controls="comment-collapse-'.$noidung['id'].'">Trả lời '.$comment_num['1'].'</a>  
-					<a href="#" style="margin-left:20px;">Lưu trữ, chia sẻ</a>  
-				</div> 	
-				'.loadcomment('comment',$noidung['id']).'	
-<div class="col-md-1 sidebar"></div><div class="col-md-10" style="border-bottom: solid;border-color:#e1e1e1;border-width: 2px;padding: 5px;margin-top:5px;"></div><div class="col-md-1"></div>		  
-					  
-				</div>
-     			';     		
-     		}
-     		else
-     		{
-				$userinfo= load_user_basic_info('1','1','1','0',$noidung['fbid']);     		
-
-     			$return='
-				<div class="col-xs-12 col-sm-1">
-					<img alt="'.$userinfo['ten-hien-thi'].'" src="'.$userinfo['avatar'].'" class="profile_photo_img comment_image" height="25" width="25">
-				</div>
-				<div class="col-xs-12 col-sm-11">
-					<strong class="pull-left primary-font">'.$userinfo['ten-hien-thi'].'</strong>
-					<small class="pull-right text-muted">
-					<span class="glyphicon glyphicon-time"></span>time?</small>
-					<br/>
-					<li class="ui-state-default">'.$content.'. </li>
-					<br/>
-				</div>
-     			';
-     		
-     		}
-     		break;     		     		     		 		     		
-    	default:
-			break;
-	}
-	
-	return $return;
-}
-
-function loadcomment($loai,$loai_id)
-{
-	global $mmhclass;
-	$commentlist=$mmhclass->db->query("SELECT * FROM `m_content`  WHERE `tinh-trang` = 'published' AND `id-doi-tuong`= '".$loai_id."' ORDER BY `id` DESC LIMIT 10");
-
-	while ($singlecomment= $mmhclass->db->fetch_array($commentlist))
-		{
-		$return=$return.load_single_post($singlecomment['loai'],$singlecomment['id']);
-		}
-	if (($loai=='tra-loi')||($loai=='comment')){
-		if ($_SESSION['FBID']!='') {
-		$comment='
-			<div class="row">
-				<div class="col-xs-12 col-sm-1">
-					<img alt="'.$_SESSION['FULLNAME'].'" src="https://graph.facebook.com/'.$_SESSION['FBID'].'/picture" class="profile_photo_img comment_image_add_root" height="25" width="25">		  
-				</div>
-				<div class="col-xs-12 col-sm-11">
-	
-					<div class="input-group">
-				      <form class="form-horizontal" role="form" method="POST" action="/xuly.php">	
-						<input id="userComment" class="form-control input-sm chat-input" name="noi-dung" placeholder="Write your comment here..." type="text">             
-						<input value="'.$loai_id.'" type="hidden" name="id-doi-tuong">
-						<input value="'.$loai.'" type="hidden" name="loai-doi-tuong">                       
-						<input value="addcomment" type="hidden" name="request">          
-						<span class="input-group-btn">     
-						<button type="submit" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-comment"></span> Add Comment</button>
-						</span>
-					</form>	
-					</div>
-				</div>
-			</div>
-		';
-		}
-		$return='
-			<div class="col-lg-11 col-sm-11 text-center collapse" id="comment-collapse-'.$loai_id.'" style="padding-top:10px;">
-				<div class="well">
-				'.$comment.'
-				<hr data-brackets-id="12673">
-				<ul data-brackets-id="12674" id="sortable" class="list-unstyled ui-sortable">
-					<div class="row">
-					'.$return.'
-					</div>
-				</ul>
-				</div>
-			</div>';
-		
-	}
-	return $return;	
-}
-
-
-
 function check_registered_course($loai,$loai_id)
 {
 	global $mmhclass;
@@ -1056,8 +529,6 @@ function check_registered_course($loai,$loai_id)
 	}
 	return $return;
 }
-
-
 
 function get_course_register_link($loai,$loai_id)
 {
@@ -1178,117 +649,5 @@ function load_cac_khoa_hoc()
 	return $return;
 }
 
-function load_user_single_info($avatar,$ten,$chucvu,$mota,$noilamviec,$social,$loai_id)
-{
-	global $mmhclass;
-	$user_info= $mmhclass->db->fetch_array($mmhclass->db->query("SELECT * FROM `m_user` WHERE `id`= '".$loai_id."'"));
-	$return=$user_info;
-	$return['fbid']=$user_info['fbid'];
-	if ($avatar=='1'){$avatar=$user_info['avatar'];}
-	if ($ten=='1'){$ten=$user_info['ten-hien-thi'];}
-	if ($chucvu=='1'){$chucvu=stripslashes($user_info['chuc-vu']);}
-	if ($mota=='1'){$mota=stripslashes($user_info['mo-ta']);}
-	if ($noilamviec=='1'){$noilamviec=stripslashes($user_info['noi-lam-viec']);}
-	if ($social=='1'){$fb=$user_info['fb'];$twitter=$user_info['twitter'];$website=$user_info['website'];}
-	$return['avatar']=$avatar;
-	$return['ten-hien-thi']=$ten;
-	$return['chuc-vu']=$chucvu;
-	$return['mo-ta']=$mota;
-	$return['noi-lam-viec']=$noilamviec;
-	$return['fb']=$fb;$return['twitter']=$twitter;$return['website']=$website;
-	return $return;
-}
-
-function tra_loi_cau_hoi($loai,$loai_id)
-{
-	global $mmhclass;
-	if ($_SESSION['FBID']!=''){
-	$noidung= $mmhclass->db->fetch_array($mmhclass->db->query("SELECT * FROM `m_content` WHERE `loai`= '".$loai."' AND `id`= '".$loai_id."' AND `tinh-trang`= 'published' "));
-	$onlineuser=	load_user_basic_info('1','1','1','0',$_SESSION['FBID']);
-	$return ='
-	<div class="col-lg-111 col-sm-11 text-center collapse" style="padding-top:10px;" id="tra-loi-collapse-'.$noidung['id'].'">
-							<div class="well">
-								<div class="row">
-								      <form class="form-horizontal" role="form" method="POST" action="/xuly.php">
-	
-									<div class="col-xs-12 col-sm-1">
-										<img alt="'.$onlineuser['ten-hien-thi'].'" src="'.$onlineuser['avatar'].'" class="profile_photo_img comment_image_add_root" height="25" width="25">		  
-									</div>
-									<div class="col-xs-12 col-sm-11" style="text-align:left;">
-										<author><a href="#"><b>'.$onlineuser['ten-hien-thi'].'</b></a></author><br/>
-										<div class="unimportant-lines">
-										<a href="./user/'.$_SESSION['FBID'].'">'.$onlineuser['title'].'</a> 
-										</div>      
-										<br/>
-										<textarea class="form-control" rows="3" name="noi-dung"></textarea>									<br/>  	              
-										<input value="'.$loai_id.'" type="hidden" name="id-doi-tuong">
-										<input value="'.$loai.'" type="hidden" name="loai-doi-tuong">                       
-										<input value="addcomment" type="hidden" name="request">          
-										<button type="submit" class="btn btn-primary">Submit</button><br/>
-	
-									</div>
-									</form>
-								</div>
-							</div>
-	
-						</div>	
-	';}
-	return $return;
-}
-function checkreply($loai,$loai_id)
-{
-	global $mmhclass;
-	$content_list=$mmhclass->db->query("SELECT * FROM `m_content`  WHERE `tinh-trang` = 'published' AND `id-doi-tuong`= '".$loai_id."' ORDER BY `id` DESC");
-	$i=0;
-	while ($single_content= $mmhclass->db->fetch_array($content_list))	
-	{
-		$i++;
-	}
-	$return['0']=0;	$return['1']='';
-	if ($i>0){$return['1']='('.$i.')';}
-	return $return;
-	}
-
-function checkliked($loai,$loai_id)
-{
-	global $mmhclass;
-	$return = 'no';
-	if ($_SESSION['FBID']!=''){
-		$check_like= $mmhclass->db->fetch_array($mmhclass->db->query("SELECT * FROM `m_like` WHERE `loai-doi-tuong`= '".$loai."' AND `doi-tuong-id`= '".$loai_id."' AND `loai` != 'dang-ky'"));
-		if ($check_like['id']!=''){
-			$return = 'yes';
-		}
-	}
-return $return;
-}
-function checklikers($loai,$loai_id)
-{
-	global $mmhclass;
-	$content_list=$mmhclass->db->query("SELECT * FROM `m_like`  WHERE `loai` != 'dang-ky' AND `doi-tuong-id`= '".$loai_id."' ORDER BY `id` DESC");
-	$i=0;
-	while ($single_content= $mmhclass->db->fetch_array($content_list))	
-	{
-	$i++;
-	}
-	$return['0']=0;	
-	$return['1']='';	
-	$default = 'Thích';
-	if (checkliked($loai,$loai_id)=='yes'){
-		$default='Đã thích';
-	} 
-	if ($loai=='cau-hoi'){
-		$default='Quan tâm'; 
-		if (checkliked($loai,$loai_id)=='yes'){
-			$default='Đã quan tâm';
-		}
-	}
-	if ($i>0){
-		$return['1']=$default.' | '.$i;
-	} else {
-		$return['1']=$default;
-	}
-	$return['0']=$default;
-	return $return;
-}
 
 ?>

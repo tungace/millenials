@@ -4,11 +4,25 @@ require_once "./source/includes/data.php";
 require_once "./autoload.php";
 require_once "./function.php";	
 
-//echo "aaaaa";
-$userDb = new UserDb();
+require_once "./classes/Page/Page.php";
+require_once "./classes/Page/HomePage.php";
 
-if (isset($_GET['params']))
-{
+require_once "./classes/Course.php";
+require_once "./classes/GadgetHelper.php";
+require_once "./classes/Like.php";
+require_once "./classes/LikeDb.php";
+require_once "./classes/UrlDb.php";
+require_once "./classes/User.php";
+require_once "./classes/UserDb.php";
+
+require_once "./classes/Content/Content.php";
+require_once "./classes/Content/ContentDb.php";
+require_once "./classes/Content/Comment.php";
+require_once "./classes/Content/Post.php";
+require_once "./classes/Content/Question.php";
+
+if (isset($_GET['params'])) {
+    
 	$_GET['params']=addslashes($_GET['params']);
     $params = explode( "/", $_GET['params'] );
 	
@@ -54,7 +68,6 @@ if (isset($_GET['params']))
 	}
 
 } else { 
-	//echo "aaaaa";
 	echo show('homepage');
 }  
 ?>

@@ -1,12 +1,11 @@
 <?php
-require_once "Page.php";
 
 class HomePage extends Page{
 	public function HomePage(){
-	}
+    }
 
 	public function getLeftPanel(){
-		return '<div class=\'col-md-2 sidebar\'>
+        return '<div class=\'col-md-2 sidebar\'>
 					<h3>Left Sidebar</h3>
 					<ul class="nav nav-list bs-docs-sidenav">
 						<li><a href="#global"><i class="icon-chevron-right"></i> Global styles</a></li>
@@ -24,21 +23,26 @@ class HomePage extends Page{
 	}
 	
 	public function getMainPanel(){
-		global $mmhclass;
+        global $mmhclass;
 	
-		$postlist = $mmhclass->db->query("SELECT * FROM `m_content`  WHERE `loai` IN ('bai-viet', 'cau-hoi') AND `tinh-trang` = 'published' LIMIT 0 , 30");
+		$postlist = $mmhclass->db->query("SELECT * FROM `m_content`  WHERE `loai` IN ('bai-viet', 'cau-hoi') AND `tinh-trang` = 'published' ");
 		
-		while ($article = $mmhclass->db->fetch_array($postlist))
-		{
-			$loai=$article['loai'].'-homepage';
-			$main.=load_single_post($loai,$article['id']);
+        while ($article = $mmhclass->db->fetch_array($postlist)) {
+            
+			if ($article['loai'] == 'bai-viet') {
+                $post = new Post($article);
+                $main .= $post->toStringWithoutComments();
+            } else if ($article['loai'] == 'cau-hoi') {
+                $question = new Question($article);
+                $main .= $question->toStringWithoutComments();
+            }
 		}
-
-		return '<div class="col-md-7 main">'.$main.'</div>';
+        
+        return '<div class="col-md-7 main">'.$main.'</div>';
 	}
 	
 	public function getRightPanel(){
-		return '<div class="col-md-3 sidebar">
+        return '<div class="col-md-3 sidebar">
 					<h3>Right Sidebar</h3>
 					<ul class="nav nav-tabs nav-stacked">
 						<li><a href="#">Another Link 1</a></li>
