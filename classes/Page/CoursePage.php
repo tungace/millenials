@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 class CoursePage extends Page {
 	public function getLeftPanel(){

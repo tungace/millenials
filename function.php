@@ -149,7 +149,6 @@ function show($loai) {
 	global $mmhclass;
     $page = null;
 	
-    
 	switch ($loai){
 		case 'homepage' :		//neu la homepage
             $page = new HomePage();
@@ -203,8 +202,7 @@ function show($loai) {
 	$main	= $page->getMainPanel();
 	$right	= $page->getRightPanel();
 	
-    $return = showtemplate($left, $main, $right, $loai, $loai_id); //sau khi đã có đầy đủ thông tin các phần quan trọng thì chèn vào template
-	return $return;
+    return showtemplate($left, $main, $right, $loai, $loai_id); //sau khi đã có đầy đủ thông tin các phần quan trọng thì chèn vào template
 }
 
 function showtemplate($left, $main, $right, $loai, $loai_id)
@@ -221,8 +219,8 @@ function showtemplate($left, $main, $right, $loai, $loai_id)
 		$re_root='<#ROOT#>';
 	$replace = array($header, $left, $main, $right, $web_root);
 	$with = array($re_header, $re_left, $re_main, $re_right, $re_root);
-	$return.= str_replace($with, $replace, $raw);		
-	return $return;
+	
+	return str_replace($with, $replace, $raw);
 }
 
 function showheader($loai,$loai_id)

@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 class GadgetHelper {
     public function GadgetHelper(){
     }
@@ -107,5 +107,4 @@ class GadgetHelper {
 }
 
 $gadgetHelper = new GadgetHelper();
-
 ?>

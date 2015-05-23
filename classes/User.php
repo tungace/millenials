@@ -42,17 +42,18 @@ class User {
 		$this->other			= $user_info['other'];
 	}
 	
-	public function toStringForAnswer(){
+	public function toStringForAnswer($likeNum){
 		return '<div class="col-xs-8 col-sm-1">
 					<img alt="'.$this->displayName.'" src="'.$this->avatar.'" height="32" width="32">
 				</div>
 				<div class="col-xs-4 col-sm-10">
 					<author><a href="./user/'.$this->fbId.'">'.$this->displayName.', '.$this->role.' @ '.$this->workingAddress.'</a></author>
-					<br>
+                    <br>
+                    <div class="unimportant-lines">
+                        <b>'.$likeNum.' lượt thích</b>
+                    </div>
 				</div>';
 	}
 	
 }
-
-
 ?>

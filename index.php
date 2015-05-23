@@ -1,12 +1,9 @@
 <?php
-
 require_once "./source/includes/data.php";
 require_once "./autoload.php";
 require_once "./function.php";	
-
 require_once "./classes/Page/Page.php";
 require_once "./classes/Page/HomePage.php";
-
 require_once "./classes/Course.php";
 require_once "./classes/GadgetHelper.php";
 require_once "./classes/Like.php";
@@ -14,7 +11,6 @@ require_once "./classes/LikeDb.php";
 require_once "./classes/UrlDb.php";
 require_once "./classes/User.php";
 require_once "./classes/UserDb.php";
-
 require_once "./classes/Content/Content.php";
 require_once "./classes/Content/ContentDb.php";
 require_once "./classes/Content/Comment.php";
@@ -26,7 +22,7 @@ if (isset($_GET['params'])) {
 	$_GET['params']=addslashes($_GET['params']);
     $params = explode( "/", $_GET['params'] );
 	
-	switch ($_GET['params']){
+    switch ($_GET['params']){
 		case 'login':			//neu la login	
 			login();
 			break;
@@ -67,7 +63,7 @@ if (isset($_GET['params'])) {
 
 	}
 
-} else { 
-	echo show('homepage');
-}  
+} else {
+    echo show('homepage');
+}
 ?>

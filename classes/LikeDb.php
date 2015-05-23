@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 class LikeDb {
 	public function LikeDb(){
 	}

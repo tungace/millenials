@@ -56,10 +56,7 @@ class Post extends Content {
                             </div>
                             <a href="./'.$url.'"><htitle>'.$tieude.'</htitle></a>				
                             <div class="row">
-                                '.$user->toStringForAnswer().'
-                                <div class="unimportant-lines">
-                                    <b>'.$likeDb->getLikeNumberByTargetId($this->id).' lượt thích</b>
-                                </div>      
+                                '.$user->toStringForAnswer($likeDb->getLikeNumberByTargetId($this->id)).'
                             </div>
                         </div>
                         <div class="noi-dung">

@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 class DiscussionPage extends Page {
 	public function getLeftPanel(){

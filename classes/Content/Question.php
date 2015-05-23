@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 //require "ContentDb.php";
 
 class Question extends Content {
