@@ -43,7 +43,7 @@ class ContentDb {
 	public function getCommentNumByTargetId($targetIdParam){
 		global $mmhclass;
         
-        $commentNum = $mmhclass->db->query("SELECT COUNT(*) FROM `m_content` WHERE `loai`= 'comment' AND `id-doi-tuong`= '".$targetIdParam."' AND `tinh-trang`= 'published'");
+        $commentNum = count($this->getCommentListByTargetId($targetIdParam));
 		return $commentNum;
 	}
 }
