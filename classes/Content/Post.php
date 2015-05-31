@@ -16,6 +16,7 @@ class Post extends Content {
 		}
         
         return $this->toStringWithoutComments().$commentContent;  
+        
 	}
     
     public function toStringWithoutComments(){
@@ -54,10 +55,10 @@ class Post extends Content {
                                     </div><!-- /btn-group -->
                                 </div>
                             </div>
-                            <a href="./'.$url.'"><htitle>'.$tieude.'</htitle></a>				
-                            <div class="row">
-                                '.$user->toStringForAnswer($likeDb->getLikeNumberByTargetId($this->id)).'
-                            </div>
+                        </div>
+                        <a href="./'.$url.'"><htitle>'.$tieude.'</htitle></a>				
+                        <div class="row">
+                            '.$user->toStringForAnswer($likeDb->getLikeNumberByTargetId($this->id)).'
                         </div>
                         <div class="noi-dung">
                             <b><i>'.$preview.'</b></i>

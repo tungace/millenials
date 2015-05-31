@@ -4,6 +4,9 @@ require_once "./autoload.php";
 require_once "./function.php";	
 require_once "./classes/Page/Page.php";
 require_once "./classes/Page/HomePage.php";
+require_once "./classes/Page/PostPage.php";
+require_once "./classes/Page/QuestionPage.php";
+
 require_once "./classes/Course.php";
 require_once "./classes/GadgetHelper.php";
 require_once "./classes/Like.php";
@@ -54,7 +57,7 @@ if (isset($_GET['params'])) {
 			
 		default:
 			
-			$exist= $mmhclass->db->fetch_array($mmhclass->db->query("SELECT * FROM `m_url` WHERE `url`= '".$_GET['params']."' AND `tinh-trang`!= 'deleted'"));
+			$exist = $mmhclass->db->fetch_array($mmhclass->db->query("SELECT * FROM `m_url` WHERE `url`= '".$_GET['params']."' AND `tinh-trang`!= 'deleted'"));
 			if ($exist['loai']!='') {
 				echo show($exist['loai'],$exist['id-loai']);
 			} else {

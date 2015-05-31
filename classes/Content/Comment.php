@@ -31,7 +31,7 @@ class Comment extends Content {
                                 <author><a href="./user/'.$user->fbId.'">'.$user->displayName.', '.$user->role.' @ '.$user->workingAddress.'</a></author>
                                 <br>
                                 <div class="unimportant-lines">
-                                    <b>'.$likeDb->getLikeNumByTargetId($this->id).' lượt thích</b>
+                                    <b>'.$likeDb->getLikeNumberByTargetId($this->id).' lượt thích</b>
                                 </div>      
                             </div>
                             <div class="col-xs-8 col-xs-1">
@@ -73,7 +73,8 @@ class Comment extends Content {
                     <div class="col-md-1 sidebar"></div>
                     <div class="col-md-10" style="border-bottom: solid;border-color:#e1e1e1;border-width: 2px;padding: 5px;margin-top:5px;"></div>
                     <div class="col-md-1"></div>		  
-                </div>';     		
+                </div>';       
+                
 	}
 	
 	public function toStringSmallVersion() {

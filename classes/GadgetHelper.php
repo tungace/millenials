@@ -75,8 +75,10 @@ class GadgetHelper {
     public function getCommentFieldBigVersionByTargetId($targetIdParam) {
         global $userDb;
         
-        if ($_SESSION['FBID']!=''){
-            $onlineuser = $userDb->getUserByFbId(_SESSION['FBID']);
+        $fbId = $_SESSION['FBID'];
+        
+        if ($fbId != ''){
+            $onlineuser = $userDb->getUserByFbId($fbId);
             $return =  '<div class="col-lg-11 col-sm-11 text-center collapse" style="padding-top:10px;" id="tra-loi-collapse-'.$targetIdParam.'">
                             <div class="well">
                                 <div class="row">

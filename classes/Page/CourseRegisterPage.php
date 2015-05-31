@@ -2,7 +2,7 @@
 require_once "Page.php";
 
 class CourseRegisterPage extends Page {
-	var courseId;
+	public $courseId;
 	
 	public function CourseRegisterPage($idParam){
 		$this->courseId = $idParam;

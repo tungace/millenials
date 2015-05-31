@@ -3,8 +3,8 @@ require_once "Page.php";
 require_once "../User.php";
 
 class EditUserPage extends Page {
-	var userId;
-	var user;
+	public $userId;
+	public $user;
 	
 	public function EditUserPage($idParam){
 		$this->userId 	= $idParam;

@@ -145,7 +145,7 @@ function show404()
 
 //////////////////////////////
 
-function show($loai) {
+function show($loai, $loai_id) {
 	global $mmhclass;
     $page = null;
 	
@@ -188,8 +188,10 @@ function show($loai) {
     	case 'bai-hoc':
 			break;     			     			     		        		    		        		
     	case 'bai-viet':
+            $page = new PostPage($loai_id);
 			break;
     	case 'cau-hoi':
+    		$page = new QuestionPage($loai_id);
 			break;
     	case 'tra-loi':
 			break;     		     		     		

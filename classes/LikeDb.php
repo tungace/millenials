@@ -6,8 +6,9 @@ class LikeDb {
 	public function checkLiked($targetIdParam){
         global $mmhclass;
         
-		$likeNum = $mmhclass->db->query("SELECT COUNT(*) FROM `m_like`  WHERE `doi-tuong-id`= '".$targetIdParam."' AND `fbid`= '".$_SESSION['FBID']."'");
-		return ($likeNum > 0);
+		$likeList = $mmhclass->db->fetch_array(
+                        $mmhclass->db->query("SELECT * FROM `m_like`  WHERE `doi-tuong-id`= '".$targetIdParam."' AND `fbid`= '".$_SESSION['FBID']."'"));
+		return (count($likeList) > 0);
 	}
 	
 	public function getLikeListByTargetId($targetIdParam){
@@ -15,7 +16,10 @@ class LikeDb {
 		
 		$result = array();
 		$total_likers = $mmhclass->db->query("SELECT * FROM `m_like`  WHERE `doi-tuong-id`= '".$targetIdParam."' ORDER BY `id` DESC ");
-		return $result;
+		while ($liker = $mmhclass->db->fetch_array($total_likers)){
+            $result[] = $liker;
+        }
+        return $result;
 	}
 	
 	public function getLikeNumberByTargetId($targetIdParam){
