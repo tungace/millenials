@@ -98,7 +98,7 @@ function clean($string) {
 function login()
 {
 	global $mmhclass;
-	$loginUrl='./fbconfig.php';
+	$loginUrl = './fbconfig.php';
 	header("Location: ".$loginUrl);
 	return $_SESSION['FBID'];
 }

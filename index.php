@@ -20,6 +20,14 @@ require_once "./classes/Content/Comment.php";
 require_once "./classes/Content/Post.php";
 require_once "./classes/Content/Question.php";
 
+
+/**
+ * Use Tungace's fb account as default if this is localhost
+ */
+if (strpos($web_root, "localhost") !== FALSE){
+	$_SESSION['FBID'] = "879505798754632"; // Tungace's account as default
+}
+
 if (isset($_GET['params'])) {
     
 	$_GET['params']=addslashes($_GET['params']);

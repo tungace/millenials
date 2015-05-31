@@ -3,32 +3,44 @@ class GadgetHelper {
     public function GadgetHelper(){
     }
     
+    public function getLikeButtonContentByTargetId($targetIdParam){
+    	global $likeDb;
+    
+    	$likeNum = $likeDb->getLikeNumberByTargetId($targetIdParam);
+    	$buttonContent = "";
+    	if ($likeDb->checkLiked($targetIdParam)){
+    		$buttonContent = "Đã thích";
+    	} else {
+    		$buttonContent = "Thích";
+    	}
+    	$buttonContent .= " | ".$likeNum;
+    	return $buttonContent;
+    }
+    
     public function getLikeButtonByTargetId($targetIdParam){
-        global $likeDb;
-        
-		$likeNum = $likeDb->getLikeNumberByTargetId($targetIdParam);
-		$buttonContent = "";
-		if ($likeDb->checkLiked($targetIdParam) > 0){
-			$buttonContent = "Đã thích";
-		} else {
-			$buttonContent = "Thích";
-		}
-		$buttonContent .= " | ".$likeNum;
-		return '<button type="button" class="btn btn-default btn-sm actlike" request="like" likeid="'.$targetIdParam.'">'.$buttonContent.'</button>';
+		return 	'<button type="button" class="btn btn-default btn-sm actlike" request="like" likeid="'.$targetIdParam.'">'
+					.$this->getLikeButtonContentByTargetId($targetIdParam).
+				'</button>';
 	}
     
-    public function getFollowButtonByTargetId($targetIdParam){
-        global $likeDb;
-        
+	public function getFollowButtonContentByTargetId($targetIdParam){
+		global $likeDb;
+	
 		$likeNum = $likeDb->getLikeNumberByTargetId($targetIdParam);
 		$buttonContent = "";
-		if ($likeDb->checkLiked($targetIdParam) > 0){
+		if ($likeDb->checkLiked($targetIdParam)){
 			$buttonContent = "Đã Quan tâm";
 		} else {
 			$buttonContent = "Quan tâm";
 		}
 		$buttonContent .= " | ".$likeNum;
-		return '<button type="button" class="btn btn-danger actlike" request="like" likeid="'.$targetIdParam.'">'.$buttonContent.'</button>';
+		return $buttonContent;
+	}
+	
+    public function getFollowButtonByTargetId($targetIdParam){
+        return 	'<button type="button" class="btn btn-danger actlike" request="follow" likeid="'.$targetIdParam.'">'
+        			.$this->getFollowButtonContentByTargetId($targetIdParam).
+        		'</button>';
 	}
     
     public function getCommentButtonByTargetId($targetIdParam){
