@@ -102,6 +102,7 @@ function login()
 	header("Location: ".$loginUrl);
 	return $_SESSION['FBID'];
 }
+
 //////////////////////////////
 
 function showcackhoahoc()
@@ -213,14 +214,19 @@ function showtemplate($left, $main, $right, $loai, $loai_id)
 	global $web_root;
 	
 	$header = showheader($loai,$loai_id);
+    $navbar = new Navbar();
+    $navbar = $navbar->toString();
+    
 	$raw= file_get_contents('./main.tpl');
-		$re_header='<#HEADER#>';
-		$re_left='<#LEFT_SIDEBAR#>';
-		$re_main='<#MAIN#>';
-		$re_right='<#RIGHT_SIDEBAR#>';
-		$re_root='<#ROOT#>';
-	$replace = array($header, $left, $main, $right, $web_root);
-	$with = array($re_header, $re_left, $re_main, $re_right, $re_root);
+    $re_header = '<#HEADER#>';
+    $re_left = '<#LEFT_SIDEBAR#>';
+    $re_main = '<#MAIN#>';
+    $re_right = '<#RIGHT_SIDEBAR#>';
+    $re_root = '<#ROOT#>';
+    $re_navbar = '<#NAVBAR#>';
+    
+	$replace = array($header, $left, $main, $right, $navbar, $web_root);
+	$with = array($re_header, $re_left, $re_main, $re_right, $re_navbar, $re_root);
 	
 	return str_replace($with, $replace, $raw);
 }
