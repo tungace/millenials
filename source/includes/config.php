@@ -15,6 +15,6 @@
 	$mmhclass->info->config['sql_database']   = "the_millenials";
 	//$mmhclass->info->config['sql_tbl_prefix'] = "mmh_";
 	
-	$web_root = "http://local.tungace.com:1234"
+	$web_root = "http://local.tungace.com:1234";
 
 ?>

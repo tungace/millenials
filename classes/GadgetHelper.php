@@ -18,9 +18,15 @@ class GadgetHelper {
     }
     
     public function getLikeButtonByTargetId($targetIdParam){
-		return 	'<button type="button" class="btn btn-default btn-sm actlike" request="like" likeid="'.$targetIdParam.'">'
-					.$this->getLikeButtonContentByTargetId($targetIdParam).
-				'</button>';
+        if ($_SESSION['FBID'] != null) {
+            return 	'<button type="button" class="btn btn-default btn-sm actlike" request="like" likeid="'.$targetIdParam.'">'
+                        .$this->getLikeButtonContentByTargetId($targetIdParam).
+                    '</button>';
+        } else {
+            return 	'<button type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target="#myModal">'
+                        .$this->getLikeButtonContentByTargetId($targetIdParam).
+                    '</button>';
+        }
 	}
     
 	public function getFollowButtonContentByTargetId($targetIdParam){
@@ -38,9 +44,15 @@ class GadgetHelper {
 	}
 	
     public function getFollowButtonByTargetId($targetIdParam){
-        return 	'<button type="button" class="btn btn-danger actlike" request="follow" likeid="'.$targetIdParam.'">'
-        			.$this->getFollowButtonContentByTargetId($targetIdParam).
-        		'</button>';
+        if ($_SESSION['FBID'] != null) {
+            return 	'<button type="button" class="btn btn-danger actlike" request="follow" likeid="'.$targetIdParam.'">'
+                        .$this->getFollowButtonContentByTargetId($targetIdParam).
+                    '</button>';
+        } else {
+            return 	'<button type="button" class="btn btn-danger" data-toggle="modal" data-target="#myModal">'
+                        .$this->getFollowButtonContentByTargetId($targetIdParam).
+                    '</button>';
+        }
 	}
     
     public function getCommentButtonByTargetId($targetIdParam){
