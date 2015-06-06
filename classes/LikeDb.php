@@ -20,7 +20,14 @@ class LikeDb {
 	}
 
 	public function checkLiked($targetIdParam){
-		return ($this->getLikeNumberByTargetId($targetIdParam) > 0);
+        $likeList = $this->getLikeListByTargetId($targetIdParam);
+        for ($i = 0; $i < count($likeList); $i++) {
+            if ($likeList[$i]['fbid'] == $_SESSION['FBID']) {
+                return true;
+            }
+        }
+        
+        return false;
 	}
 	
 }
