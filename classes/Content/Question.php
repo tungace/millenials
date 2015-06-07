@@ -26,7 +26,7 @@ class Question extends Content {
         $content = stripslashes($this->content);
         $tieude = stripslashes($this->title);	
         $the = stripslashes($this->tag);
-        $url = $urlDb->getUrl('cau-hoi', $this->id);													
+        $url = $urlDb->getUrl($this->id);													
         $user = $userDb->getUserByFbId($this->fbId);
         
         return '<div class="row postlayout">

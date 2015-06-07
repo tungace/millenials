@@ -31,7 +31,7 @@ class Comment extends Content {
                                 <author><a href="./user/'.$user->fbId.'">'.$user->displayName.', '.$user->role.' @ '.$user->workingAddress.'</a></author>
                                 <br>
                                 <div class="unimportant-lines">
-                                    <b>'.$likeDb->getLikeNumberByTargetId($this->id).' lượt thích</b>
+                                    '.$this->postedTime.', <b>'.$likeDb->getLikeNumberByTargetId($this->id).' lượt thích</b>
                                 </div>      
                             </div>
                             <div class="col-xs-8 col-xs-1">

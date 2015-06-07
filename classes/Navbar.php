@@ -12,7 +12,7 @@ class Navbar {
             $this->isLoggedin = true;
         }
     }
-    
+        
     private function getUserPanel() {
         if ($this->isLoggedin) {
             return '<li class="dropdown">
@@ -39,12 +39,41 @@ class Navbar {
         }
     }
     
+    private function getNotificationPanel() {
+        global $notificationDb;
+
+        if ($this->isLoggedin) {
+            $notificationList = $notificationDb->getNotificationListByFbId($_SESSION['FBID']);
+            $receivedNotificationList = $notificationDb->getReceivedNotificationListByFbId($_SESSION['FBID']);
+            
+            $notificationListToString = "";
+            for ($i = 0; $i < count($notificationList); $i++) {
+                $notificationListToString .= $notificationList[$i]->toString();
+            }
+            
+            return '<li class="dropdown notification">                   <!--Notification-->
+                        <a href="#" class="dropdown-toggle readNotification" data-toggle="dropdown" role="button" aria-expanded="false">
+                            Thông báo <span class="badge receivedNotificationNumber">'.count($receivedNotificationList).'</span><span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu notification-container" role="menu">
+                            '.$notificationListToString.'
+                            <li class="divider notification-divider"></li>
+                            <li class="dropdown-header">Tin nhắn <span class="badge">3</span></li>
+                            <li><a href="#">Một con chó vừa nhắn tin</a></li>
+                            <li><a href="#">Thằng điên vừa nhắn</a></li>
+                        </ul>
+                    </li>';
+        } else {
+            return '';
+        }
+    }
+    
     public function toString() {
         return '<nav class="navbar navbar-default navbar-fixed-top">
                     <div class="container">
                         <div class="navbar-header">
                             <!-- The mobile navbar-toggle button can be safely removed since you do not need it in a non-responsive implementation -->
-                            <a class="navbar-brand" href="#">Millennials</a>
+                            <a class="navbar-brand" href="<#ROOT#>">Millennials</a>
                         </div>
                         <!-- Note that the .navbar-collapse and .collapse classes have been removed from the #navbar -->
                         <div id="navbar">
@@ -62,21 +91,8 @@ class Navbar {
                             </form>
                             
                             <ul class="nav navbar-nav navbar-right">
-                                <li class="dropdown">
-                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Thông báo <span class="badge">3</span><span class="caret"></span></a>
-                                    <ul class="dropdown-menu" role="menu">
-                                        <li><a href="#">Thằng này làm cái kia</a></li>
-                                        <li><a href="#">Thằng kia làm cái này</a></li>
-                                        <li><a href="#">Con này đụ thằng kia</a></li>
-                                        <li><a href="#">Thằng kia đụ con này</a></li>
-                                        
-                                        <li class="divider"></li>
-                                        <li class="dropdown-header">Tin nhắn <span class="badge">3</span></li>
-                                        <li><a href="#">Một con chó vừa nhắn tin</a></li>
-                                        <li><a href="#">Thằng điên vừa nhắn</a></li>
-                                    </ul>
-                                </li>			
-                                '.$this->getUserPanel().'
+                                '.$this->getNotificationPanel()
+                                .$this->getUserPanel().'
                                 <li><a href="#" style="background-color:#2b6dad;color:white;" data-toggle="modal" data-target=".bs-example-modal-lg">Đăng bài</a></li>
                                 <li><a href="#" style="background-color:#991f00;color:white;">Học bài</a></li>                            
                             </ul>

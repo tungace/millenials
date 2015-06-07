@@ -7,33 +7,40 @@ class ContentDb {
         global $mmhclass;
         
 		$postInfo = $mmhclass->db->fetch_array($mmhclass->db->query("SELECT * FROM `m_content` WHERE `loai`= 'bai-viet' AND `id`= '".$idParam."' AND `tinh-trang`= 'published'"));
-		return new Post($postInfo);
+		if ($postInfo) {
+            return new Post($postInfo);
+        } else {
+            return null;
+        }
 	}
 	
 	public function getQuestionById($idParam){
         global $mmhclass;
         
 		$QuestionInfo = $mmhclass->db->fetch_array($mmhclass->db->query("SELECT * FROM `m_content` WHERE `loai`= 'cau-hoi' AND `id`= '".$idParam."' AND `tinh-trang`= 'published'"));
-		return new Question($QuestionInfo);
+		if ($QuestionInfo) {
+            return new Question($QuestionInfo);
+        } else {
+            return null;
+        }
 	}
-	
-	/*public function getAnswerById($idParam){
-		$AnswerInfo = $mmhclass->db->fetch_array($mmhclass->db->query("SELECT * FROM `m_content` WHERE `loai`= 'tra-loi' AND `id`= '".$idParam."' AND `tinh-trang`= 'published'"));
-		return new Answer($AnswerInfo);
-	}*/
 	
 	public function getCommentById($idParam){
         global $mmhclass;
         
 		$commentInfo = $mmhclass->db->fetch_array($mmhclass->db->query("SELECT * FROM `m_content` WHERE `loai`= 'comment' AND `id`= '".$idParam."' AND `tinh-trang`= 'published'"));
-		return new Comment($commentInfo);
+		if ($commentInfo) {
+            return new Comment($commentInfo);
+        } else {
+            return null;
+        }
 	}
 	
 	public function getCommentListByTargetId($targetIdParam){
 		global $mmhclass;
         
         $result = array();
-		$comments = $mmhclass->db->query("SELECT * FROM `m_content` WHERE `loai`= 'comment' AND `id-doi-tuong`= '".$targetIdParam."' AND `tinh-trang`= 'published'");
+		$comments = $mmhclass->db->query("SELECT * FROM `m_content` WHERE `loai`= 'comment' AND `id-doi-tuong`= '".$targetIdParam."' AND `tinh-trang`= 'published' ORDER BY `thoi-gian` DESC");
 		while ($commentInfo = $mmhclass->db->fetch_array($comments)){
 			$result[] = new Comment($commentInfo);
 		}

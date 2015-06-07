@@ -58,7 +58,7 @@ class GadgetHelper {
     public function getCommentButtonByTargetId($targetIdParam){
         global $contentDb;
         
-        $commentNum = $contentDb->getCommentNumByTargetId($this->id);
+        $commentNum = $contentDb->getCommentNumByTargetId($targetIdParam);
 		if ($commentNum > 0) {
 			$commentNum = "(".$commentNum.")";
 		} else {
@@ -73,6 +73,11 @@ class GadgetHelper {
     
     public function getCommentFieldSmallVersionByTargetId($targetIdParam) {
         if ($_SESSION['FBID']!='') {
+            global $userDb;
+            //global $contentDb;
+            $user = $userDb->getUserByFbId($_SESSION['FBID']);
+            //$comment = $contentDb->getCommentById($targetIdParam);
+            
 			$writeCommentField = '
 				<div class="row">
 					<div class="col-xs-12 col-sm-1">
@@ -80,13 +85,16 @@ class GadgetHelper {
 					</div>
 					<div class="col-xs-12 col-sm-11">
 						<div class="input-group">
-                            <form class="form-horizontal" role="form" method="POST" action="/xuly.php">	
+                            <form class="form-horizontal" role="form" method="POST" action="/index.php">	
                                 <input id="userComment" class="form-control input-sm chat-input" name="noi-dung" placeholder="Write your comment here..." type="text">             
                                 <input value="'.$targetIdParam.'" type="hidden" name="id-doi-tuong">
-                                <input value="comment" type="hidden" name="loai-doi-tuong">                       
+                                <!--input value="comment" type="hidden" name="loai-doi-tuong"-->
                                 <input value="addcomment" type="hidden" name="request">          
                                 <span class="input-group-btn">     
-                                    <button type="submit" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-comment"></span> Add Comment</button>
+                                    <button type="submit" class="btn btn-primary btn-sm addCommentAction" 
+                                            fbId="'.$user->fbId.'" targetId="'.$targetIdParam.'">
+                                        <span class="glyphicon glyphicon-comment"></span> Add Comment
+                                    </button>
                                 </span>
                             </form>	
 						</div>
@@ -103,10 +111,11 @@ class GadgetHelper {
         
         if ($fbId != ''){
             $onlineuser = $userDb->getUserByFbId($fbId);
-            $return =  '<div class="col-lg-11 col-sm-11 text-center collapse" style="padding-top:10px;" id="tra-loi-collapse-'.$targetIdParam.'">
+            
+            $return =  '<div class="col-lg-11 col-sm-11 text-center collapse" style="padding-top:10px;" id="comment-collapse-'.$targetIdParam.'">
                             <div class="well">
                                 <div class="row">
-                                    <form class="form-horizontal" role="form" method="POST" action="/xuly.php">
+                                    <form class="form-horizontal" role="form" method="POST" action="/index.php">
                                         <div class="col-xs-12 col-sm-1">
                                             <img alt="'.$onlineuser->displayName.'" src="'.$onlineuser->avatar.'" class="profile_photo_img comment_image_add_root" height="25" width="25">		  
                                         </div>
@@ -118,9 +127,8 @@ class GadgetHelper {
                                             <br>  	              
                                             
                                             <input value="'.$targetIdParam.'" type="hidden" name="id-doi-tuong">
-                                                <!--input value="'.$loai.'" type="hidden" name="loai-doi-tuong"-->                       
                                             <input value="addcomment" type="hidden" name="request">          
-                                            <button type="submit" class="btn btn-primary">Submit</button>
+                                            <button type="submit" class="btn btn-primary addCommentAction">Submit</button>
                                             <br>
                                         </div>
                                     </form>

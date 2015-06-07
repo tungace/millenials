@@ -14,6 +14,8 @@ require_once "./classes/LikeDb.php";
 require_once "./classes/UrlDb.php";
 require_once "./classes/User.php";
 require_once "./classes/UserDb.php";
+require_once "./classes/Notification.php";
+require_once "./classes/NotificationDb.php";
 require_once "./classes/Content/Content.php";
 require_once "./classes/Content/ContentDb.php";
 require_once "./classes/Content/Comment.php";
@@ -28,6 +30,99 @@ require_once "./classes/Navbar.php";
 /*if (strpos($web_root, "localhost") !== FALSE){
 	$_SESSION['FBID'] = "879505798754632"; // Tungace's account as default
 }*/
+
+if (($_SESSION['FBID'] != null) && ($_POST['request'] != '')) {
+    switch ($_POST['request']) {
+    case 'addcomment':
+        $loai = 'comment';
+        $id_doi_tuong = $_POST['id-doi-tuong'];
+        $noi_dung = addslashes($_POST['noi-dung']);
+        if ($noi_dung != '') {
+            $time = date('Y-m-d H:i:s');
+            $mmhclass->db->query("INSERT INTO `m_content` (`loai`, `fbid`, `id-doi-tuong`,`noi-dung`,`tinh-trang`,`thoi-gian`) 
+                                    VALUES ('{$loai}', '{$_SESSION['FBID']}', '{$id_doi_tuong}', '{$noi_dung}', 'published', '{$time}');");
+                
+            $getback = $mmhclass->db->fetch_array($mmhclass->db->query("SELECT * FROM `m_content` WHERE `id`= '".$id_doi_tuong."' AND `tinh-trang`= 'published' "));
+            if ($getback['loai'] == 'comment') {
+                $getback = $mmhclass->db->fetch_array($mmhclass->db->query("SELECT * FROM `m_content` WHERE `id`= '".$getback['id-doi-tuong']."' AND `tinh-trang`= 'published' "));
+            }
+            $link = $urlDb->getUrl($getback['id']);
+            $redirect = './'.$link;
+            
+            $author = $userDb->getUserByfbId($getback['fbid']);
+            $sender = $userDb->getUserByfbId($_SESSION['FBID']);
+            
+            $type = $getback['loai'];
+            if ($type == 'bai-viet') {
+                $type = 'bài viết';
+            } else if ($type == 'cau-hoi') {
+                $type = 'câu hỏi';
+            } else if ($type == 'comment') {
+                $type = 'bình luận';
+            }
+            
+            if ($author->fbId != $sender->fbId) {
+                $content = $sender->displayName.' đã bình luận vào '.$type.' của '.$author->displayName.'.';
+                $url = $urlDb->getUrl($getback['id']);
+                $notificationDb->sendNotificationTo($author->fbId, $url, $content);
+            }
+            
+            // gui notification den những người quan tâm đến câu hỏi
+            if ($getback['loai'] == 'cau-hoi') {
+                $likeList = $likeDb->getLikeListByTargetId($getback['id']);
+                for ($i = 0; $i < count($likeList); $i++) { 
+                    $liker = $userDb->getUserByFbId($likeList[$i]['fbid']);
+                    
+                    if ($liker->fbId != $sender->fbId) {
+                        $content = $sender->displayName.' đã bình luận vào '.$type.' bạn quan tâm.';
+                        $url = $urlDb->getUrl($getback['id']);
+                        $notificationDb->sendNotificationTo($liker->fbId, $url, $content);
+                    }
+                }
+            }
+            
+        }
+        header("Location: ".$redirect);			    		
+        break;    			
+	
+    default :
+        break;     		        		    		        		   
+	}
+    return;
+}
+
+if (isset($_GET['action'])){
+    if ($_SESSION['FBID'] > 0) {
+        $_GET['action'] = addslashes($_GET['action']);
+        switch ($_GET['action']) {
+        case 'getNumPendingNotification' : 
+            $pendingNotificationList = $notificationDb->getPendingNotificationListByFbId($_SESSION['FBID']);
+            $notificationDb->receiveAllPendingNotificationsByFbId($_SESSION['FBID']);
+            
+            echo count($pendingNotificationList);
+            break;
+        
+        case 'getNumReceivedNotification' : 
+            $pendingNotificationList = $notificationDb->getReceivedNotificationListByFbId($_SESSION['FBID']);
+            echo count($pendingNotificationList);
+            break;
+            
+        case 'getReceivedNotification' : 
+            $receivedNotificationList = $notificationDb->getReceivedNotificationListByFbId($_SESSION['FBID']);
+            for ($i = 0; $i < count($receivedNotificationList); $i++) {
+                echo $receivedNotificationList[$i]->toString();
+            }
+            break;
+        
+        case 'readAllReceivedNotification' :
+            $notificationDb->readAllReceivedNotificationsByFbId($_SESSION['FBID']);
+            break;
+        default :
+            break;
+        }
+    }
+    return;
+}
 
 if (isset($_GET['params'])) {
     

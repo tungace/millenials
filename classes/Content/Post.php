@@ -30,7 +30,7 @@ class Post extends Content {
 		$tieude = stripslashes($this->title);	
 		$the = stripslashes($this->tag);								
 		$user = $userDb->getUserByFbId($this->fbId);
-        $url = $urlDb->getUrl('bai-viet', $this->id);							
+        $url = $urlDb->getUrl($this->id);							
         
         return '<div class="row postlayout">
 				    <div class="col-sm-11">

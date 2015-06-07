@@ -1,63 +1,56 @@
 <?php
 
+require_once "./source/includes/data.php";
+require_once 'autoload.php';
+require_once "./function.php";		
+require_once "./classes/UrlDb.php";
 
-	require_once "./source/includes/data.php";
-	require_once 'autoload.php';
-	require_once "./function.php";	
+global $urlDb;
+
+if (($_SESSION['FBID'] != null) && ($_POST['request'] != '')) {
+    switch ($_POST['request']) {
+    case 'addcomment':
+        $loai = 'comment';
+        $id_doi_tuong = $_POST['id-doi-tuong'];
+        $noi_dung = addslashes($_POST['noi-dung']);
+        if ($noi_dung != '') {
+            $time = date('Y-m-d H:i:s');
+            $mmhclass->db->query("INSERT INTO `m_content` (`loai`, `fbid`, `id-doi-tuong`,`noi-dung`,`tinh-trang`,`thoi-gian`) 
+                                    VALUES ('{$loai}', '{$_SESSION['FBID']}', '{$id_doi_tuong}', '{$noi_dung}', 'published', '{$time}');");
+                
+            
+                
+            $getback = $mmhclass->db->fetch_array($mmhclass->db->query("SELECT * FROM `m_content` WHERE `id`= '".$id_doi_tuong."' AND `tinh-trang`= 'published' "));
+            if ($getback['loai'] == 'comment') {
+                $getback = $mmhclass->db->fetch_array($mmhclass->db->query("SELECT * FROM `m_content` WHERE `id`= '".$getback['id-doi-tuong']."' AND `tinh-trang`= 'published' "));
+            }
+            $link = $urlDb->getUrl($getback['id']);
+            $redirect = './'.$link;            
+        }
+
+        header("Location: ".$redirect);			    		
+        break;    			
 	
-
-if (($_SESSION['FBID']>0)&&($_POST['request']!=''))
-{
-
-	switch ($_POST['request']):
-    		case 'addcomment':
-    		if ($_POST['loai-doi-tuong']=='cau-hoi'){$loai='tra-loi';}
-    		if ($_POST['loai-doi-tuong']=='bai-viet'){$loai='comment';}
-    		if ($_POST['loai-doi-tuong']=='tra-loi'){$loai='comment';}
-    		if ($_POST['loai-doi-tuong']=='comment'){$loai='comment';}        		    
-    		$id_doi_tuong=$_POST['id-doi-tuong'];
-    		$noi_dung=addslashes($_POST['noi-dung']);
-    		if ($noi_dung!=''){$time=date('Y-m-d H:i:s');
-    		$mmhclass->db->query("INSERT INTO `m_content` (`loai`, `fbid`, `loai-doi-tuong`,`id-doi-tuong`,`noi-dung`,`tinh-trang`,`thoi-gian`) VALUES ('{$loai}', '{$_SESSION['FBID']}', '{$_POST['loai-doi-tuong']}','{$id_doi_tuong}','{$noi_dung}','published','{$time}');");
-			if (($_POST['loai-doi-tuong']!='tra-loi')&&($_POST['loai-doi-tuong']!='bai-viet')&&($_POST['loai-doi-tuong']!='comment'))
-			{
-		    		$getback= $mmhclass->db->fetch_array($mmhclass->db->query("SELECT * FROM `m_content` WHERE `loai`= '".$loai."' AND `id-doi-tuong`= '".$id_doi_tuong."' AND `fbid`= '".$_SESSION['FBID']."' AND `noi-dung`= '".$noi_dung."' AND `thoi-gian`= '".$time."' AND `tinh-trang`= 'published' "));
-		    		$link=geturl($_POST['loai-doi-tuong'],$_POST['id-doi-tuong']).'/'.$loai.'/'.$getback['id'];$redirect='./'.$link;
-		    		$mmhclass->db->query("INSERT INTO `m_url` (`loai`, `id-loai`, `url`,`tinh-trang`) VALUES ('{$loai}', '{$getback['id']}', '{$link}','published');"); 
-		    	}else{ 
-		    	  	if ($_POST['loai-doi-tuong']=='comment')
-		    		{$getback= $mmhclass->db->fetch_array($mmhclass->db->query("SELECT * FROM `m_content` WHERE `loai`= '".$_POST['loai-doi-tuong']."' AND `id`= '".$_POST['id-doi-tuong']."'"));
-		    		$redirect='./'.geturl($getback['loai-doi-tuong'],$getback['id-doi-tuong']);
-		    		}
-		    		else
-		    		{    	
-		    		$redirect='./'.geturl($_POST['loai-doi-tuong'],$_POST['id-doi-tuong']);}}
-    		}
-
-		 header("Location: ".$redirect);			    		
-     		break;    			
-	
-    		case 'edit-user':
-	$user_info= $mmhclass->db->fetch_array($mmhclass->db->query("SELECT * FROM `m_user` WHERE `fbid`= '".$_SESSION['FBID']."'"));    		
-	if (($_POST['email']!='')&&(is_valid_email($_POST['email']))){$email=$_POST['email'];}else{$email=$user_info['email'];}
-	if ($_POST['gioi-tinh']!=''){$gioi_tinh=$_POST['gioi-tinh'];}else{$gioi_tinh=$user_info['gioi-tinh'];}
-	if (($_POST['ngay']!='')&&($_POST['thang']!='')&&($_POST['nam']!='')){$ngay_sinh=$_POST['nam'].'-'.$_POST['thang'].'-'.$_POST['ngay'];}else{$ngay_sinh=$user_info['ngay-sinh'];}
-	if ($_POST['chuc-vu']!=''){$chuc_vu=addslashes($_POST['chuc-vu']);}else{$chuc_vu=$user_info['chuc-vu'];}
-	if ($_POST['noi-lam-viec']!=''){$noi_lam_viec=addslashes($_POST['noi-lam-viec']);}else{$noi_lam_viec=$user_info['noi-lam-viec'];}
-	if ($_POST['mo-ta']!=''){$mo_ta=addslashes($_POST['mo-ta']);}else{$mo_ta=$user_info['mo-ta'];}
-	if ($_POST['website']==''){$website=$_POST['website'];}else{$website=$user_info['website'];}
-	if ($_POST['fb']==''){$website=$_POST['fb'];}else{$fb=$user_info['fb'];}
-	if ($_POST['twitter']==''){$website=$_POST['twitter'];}else{$twitter=$user_info['twitter'];}		
-	//$mmhclass->db->query("UPDATE m_user SET email='$email' ,gioi-tinh='$gioi_tinh' ,ngay-sinh='$ngay_sinh' ,chuc-vu='$chuc_vu' ,noi-lam-viec='$noi_lam_viec' ,mo-ta='$mo_ta' ,website='$website' ,fb='$fb' ,twitter='$twitter' WHERE fbid=$_SESSION['FBID']");
-	// 	$mmhclass->db->query("UPDATE m_user SET `email`='$email' ,`gioi-tinh`='$gioi_tinh' ,`ngay-sinh`='$ngay_sinh' ,`chuc-vu`='$chuc_vu' ,`noi-lam-viec`='$noi_lam_viec' ,`mo-ta`='$mo_ta' ,`website`='$website' ,`fb`='$fb' ,`twitter`='$twitter' WHERE fbid=$_SESSION['FBID']");
-	$mmhclass->db->query("UPDATE m_user SET `email`='".$email."' ,`gioi-tinh`='".$gioi_tinh."' ,`ngay-sinh`='".$ngay_sinh."' ,`chuc-vu`='".$chuc_vu."' ,`noi-lam-viec`='".$noi_lam_viec."' ,`mo-ta`='".$mo_ta."' ,`website`='".$website."' ,`fb`='".$fb."' ,`twitter`='".$twitter."' WHERE fbid='".$_SESSION['FBID']."'");
-	
-	$redirect='./user/'.$user_info['fbid'];
-	 header("Location: ".$redirect);
-	 
-	 
-     		break;
-		case 'chinhsua':
+    case 'edit-user':
+        $user_info= $mmhclass->db->fetch_array($mmhclass->db->query("SELECT * FROM `m_user` WHERE `fbid`= '".$_SESSION['FBID']."'"));    		
+        if (($_POST['email']!='')&&(is_valid_email($_POST['email']))){$email=$_POST['email'];}else{$email=$user_info['email'];}
+        if ($_POST['gioi-tinh']!=''){$gioi_tinh=$_POST['gioi-tinh'];}else{$gioi_tinh=$user_info['gioi-tinh'];}
+        if (($_POST['ngay']!='')&&($_POST['thang']!='')&&($_POST['nam']!='')){$ngay_sinh=$_POST['nam'].'-'.$_POST['thang'].'-'.$_POST['ngay'];}else{$ngay_sinh=$user_info['ngay-sinh'];}
+        if ($_POST['chuc-vu']!=''){$chuc_vu=addslashes($_POST['chuc-vu']);}else{$chuc_vu=$user_info['chuc-vu'];}
+        if ($_POST['noi-lam-viec']!=''){$noi_lam_viec=addslashes($_POST['noi-lam-viec']);}else{$noi_lam_viec=$user_info['noi-lam-viec'];}
+        if ($_POST['mo-ta']!=''){$mo_ta=addslashes($_POST['mo-ta']);}else{$mo_ta=$user_info['mo-ta'];}
+        if ($_POST['website']==''){$website=$_POST['website'];}else{$website=$user_info['website'];}
+        if ($_POST['fb']==''){$website=$_POST['fb'];}else{$fb=$user_info['fb'];}
+        if ($_POST['twitter']==''){$website=$_POST['twitter'];}else{$twitter=$user_info['twitter'];}		
+        //$mmhclass->db->query("UPDATE m_user SET email='$email' ,gioi-tinh='$gioi_tinh' ,ngay-sinh='$ngay_sinh' ,chuc-vu='$chuc_vu' ,noi-lam-viec='$noi_lam_viec' ,mo-ta='$mo_ta' ,website='$website' ,fb='$fb' ,twitter='$twitter' WHERE fbid=$_SESSION['FBID']");
+        // 	$mmhclass->db->query("UPDATE m_user SET `email`='$email' ,`gioi-tinh`='$gioi_tinh' ,`ngay-sinh`='$ngay_sinh' ,`chuc-vu`='$chuc_vu' ,`noi-lam-viec`='$noi_lam_viec' ,`mo-ta`='$mo_ta' ,`website`='$website' ,`fb`='$fb' ,`twitter`='$twitter' WHERE fbid=$_SESSION['FBID']");
+        $mmhclass->db->query("UPDATE m_user SET `email`='".$email."' ,`gioi-tinh`='".$gioi_tinh."' ,`ngay-sinh`='".$ngay_sinh."' ,`chuc-vu`='".$chuc_vu."' ,`noi-lam-viec`='".$noi_lam_viec."' ,`mo-ta`='".$mo_ta."' ,`website`='".$website."' ,`fb`='".$fb."' ,`twitter`='".$twitter."' WHERE fbid='".$_SESSION['FBID']."'");
+        
+        $redirect='./user/'.$user_info['fbid'];
+        header("Location: ".$redirect);
+	    break;
+    
+    case 'chinhsua':
 		$content= $mmhclass->db->fetch_array($mmhclass->db->query("SELECT * FROM `m_content` WHERE `loai`= '".$_POST['loai']."' AND `id`= '".$_POST[loaiid]."' AND `tinh-trang`= 'published' "));		
 		$noidung=addslashes($_POST['noi-dung']);
 		if (($_POST['noi-dung']!='')&&($noidung!=$content['noi-dung'])){$noidung=addslashes($_POST['noi-dung']);}else{$noidung=$content['noi-dung'];}
@@ -79,7 +72,7 @@ if (($_SESSION['FBID']>0)&&($_POST['request']!=''))
      		$noidung=addslashes($_POST['noi-dung']);
      		$the=addslashes($_POST['the']);
      		$tieude=addslashes($_POST['tieu-de']);     		     		
-$time=date('Y-m-d H:i:s');
+            $time=date('Y-m-d H:i:s');
     		$mmhclass->db->query("INSERT INTO `m_content` (`loai`, `fbid`,`noi-dung`,`tinh-trang`,`thoi-gian`,`tieu-de`,`the`) VALUES ('{$_POST['loai']}', '{$_SESSION['FBID']}', '{$noidung}','published','{$time}','{$tieude}','{$the}');");
     		
  		 $getback= $mmhclass->db->fetch_array($mmhclass->db->query("SELECT * FROM `m_content` WHERE `loai`= '".$_POST['loai']."' AND `fbid`= '".$_SESSION['FBID']."' AND `noi-dung`= '".$noidung."' AND `thoi-gian`= '".$time."' AND `tinh-trang`= 'published' AND `tieu-de`= '".$tieude."' AND `the`= '".$the."' "));
@@ -91,11 +84,11 @@ $time=date('Y-m-d H:i:s');
      		break;     		        		    		        		   
     	default:
     	
-	endswitch; 	
+	} 	
 }
-if (($_SESSION['FBID']>0)&&($_GET['request']!=''))
-{
-	$content= $mmhclass->db->fetch_array($mmhclass->db->query("SELECT * FROM `m_content` WHERE `loai`= '".$_GET['loai']."' AND `id`= '".$_GET['loaiid']."' AND `tinh-trang`= 'published' "));
+
+if (($_SESSION['FBID']>0) && ($_GET['request']!='')) {
+	$content = $mmhclass->db->fetch_array($mmhclass->db->query("SELECT * FROM `m_content` WHERE `loai`= '".$_GET['loai']."' AND `id`= '".$_GET['loaiid']."' AND `tinh-trang`= 'published' "));
 	
 	switch ($_GET['request']):
 		case 'like':
@@ -215,6 +208,7 @@ if (($_SESSION['FBID']>0)&&($_GET['request']!=''))
     	default:
     	
 	endswitch; 	
+    
 	$return = '
 	  <div class="modal-dialog">
 	    <div class="modal-content">
